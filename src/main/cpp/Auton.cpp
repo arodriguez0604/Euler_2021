@@ -7,16 +7,36 @@ Auton::Auton(DalekDrive *drive, AHRS * ahrs, RaspberryPi *pi, BallIntake *ballIn
 	m_pi            = pi; 
 	m_ballIntake    = ballIntake;
 
-	//auton_phase = 0;
-	//pickupBallStart = frc::SmartDashboard::GetData("Pickup Ball Start");
-	//pickupBallEnd   = frc::SmartDashboard::GetData("Pickup Ball End");
+	autonStage = 0;
+	pickupBallStart = frc::SmartDashboard::GetData("Pickup Ball Start");
+	pickupBallEnd   = frc::SmartDashboard::GetData("Pickup Ball End");
+	//autonChallenge    = frc::SmartDashboard::GetData("Auton Challenge");
 
-	//p_temp = 0; i_temp = 0; d_temp = 0;
+	p_temp = 0; i_temp = 0; d_temp = 0, my_temp = 0;
 }
 
+void Auton::GalaticSearch(double period) {
+	switch (autonStage) {
+		case 0:
+			if(turnToFace(red1turn1))
+				autonStage++;
+			break;
+		case 1:
+			if(driveToCoordinates(red1C3x, red1C3y, red1turn1, period))
+				autonStage++;
+			break;
+		default:
+			frc::SmartDashboard::PutBoolean("Auton Done", true);
 
+	frc::SmartDashboard::PutNumber("My temp", my_temp++); 
+	frc::SmartDashboard::PutNumber("Auton Stage", autonStage);
+		
+	}
+}
 
+void Auton::AutoNav() {
 
+}
 
 // void Auton::AutonCase(int begin, int end)
 // {
@@ -136,43 +156,43 @@ Auton::Auton(DalekDrive *drive, AHRS * ahrs, RaspberryPi *pi, BallIntake *ballIn
 // 	frc::SmartDashboard::PutNumber("exit dist offset", sqrt(pow(exit_target_x - m_ahrs->GetDisplacementX(), 2) + pow(exit_target_y - m_ahrs->GetDisplacementY(), 2)));
 // }
 
-// bool Auton::driveToCoordinates(double x, double y, double angle, double period)
-// {
-// 	travelled_dist += m_drive->GetVelocity() * period;
-// 	SmartDashboard::PutNumber("velocity", m_drive->GetVelocity());
-// 	SmartDashboard::PutNumber("period", period);
-// 	SmartDashboard::PutNumber("sensesd travel", travelled_dist);
-// 	SmartDashboard::PutNumber("angle offset", angleOffset(angle) * 180 / PI); // i think angle offset is wack
-// 	SmartDashboard::PutNumber("dist offset", sqrt(x*x + y*y) - travelled_dist); // this is not correct currently
-// 	return m_pi->driveAdjusted(angleOffset(angle), sqrt(x*x + y*y) - travelled_dist, angleOffsetCoefficient);
-// }
+bool Auton::driveToCoordinates(double x, double y, double angle, double period)
+{
+	travelled_dist += m_drive->GetVelocity() * period;
+	SmartDashboard::PutNumber("velocity", m_drive->GetVelocity());
+	SmartDashboard::PutNumber("period", period);
+	SmartDashboard::PutNumber("sensesd travel", travelled_dist);
+	SmartDashboard::PutNumber("angle offset", angleOffset(angle) * 180 / PI); // i think angle offset is wack
+	SmartDashboard::PutNumber("dist offset", sqrt(x*x + y*y) - travelled_dist); // this is not correct currently
+	return m_pi->driveAdjusted(angleOffset(angle), sqrt(x*x + y*y) - travelled_dist, angleOffsetCoefficient);
+}
 
 
-// bool Auton::turnToFace(double angle)
-// {
-// 	double prev_error = p_temp;
-// 	p_temp = angleOffset(angle);
-// 	if (abs(p_temp) < turningErrorThreshold) {
-// 		return true;
-// 	}
-// 	i_temp += p_temp;
-// 	d_temp = p_temp - prev_error;
-// 	double pid_result = pTurn * p_temp + iTurn * i_temp + dTurn * d_temp;
-// 	if (pid_result > 0) {
-// 		m_drive->TankDrive(min(pid_result, maxTurnSpeed), -min(pid_result, maxTurnSpeed), false);
-// 	} else {
-// 		m_drive->TankDrive(max(pid_result, -maxTurnSpeed), -max(pid_result, -maxTurnSpeed), false);
-// 	}
-// 	return false;
-// }
+bool Auton::turnToFace(double angle)
+{
+	double prev_error = p_temp;
+	p_temp = angleOffset(angle);
+	if (abs(p_temp) < turningErrorThreshold) {
+		return true;
+	}
+	i_temp += p_temp;
+	d_temp = p_temp - prev_error;
+	double pid_result = pTurn * p_temp + iTurn * i_temp + dTurn * d_temp;
+	if (pid_result > 0) {
+		m_drive->TankDrive(min(pid_result, maxTurnSpeed), -min(pid_result, maxTurnSpeed), false);
+	} else {
+		m_drive->TankDrive(max(pid_result, -maxTurnSpeed), -max(pid_result, -maxTurnSpeed), false);
+	}
+	return false;
+}
 
-// double Auton::angleOffset(double angle)
-// {
-// 	SmartDashboard::PutNumber("ahrs ang", m_ahrs->GetAngle());
-// 	double offset = fmod(angle - (m_ahrs->GetAngle()) * PI / 180, 2 * PI);
-// 	//Josh's function = fmod(angle - (m_ahrs->GetAngle()) * PI / 180, 360)
-// 	if (offset > PI) {
-// 		offset -= PI * 2;
-// 	}
-// 	return offset;
-// } 
+double Auton::angleOffset(double angle)
+{
+	SmartDashboard::PutNumber("ahrs ang", m_ahrs->GetAngle());
+	double offset = fmod(angle - (m_ahrs->GetAngle()) * PI / 180, 2 * PI);
+	//Josh's function = fmod(angle - (m_ahrs->GetAngle()) * PI / 180, 360)
+	if (offset > PI) {
+		offset -= PI * 2;
+	}
+	return offset;
+} 

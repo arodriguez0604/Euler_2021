@@ -34,6 +34,7 @@ void Robot::RobotInit()
   frc::SmartDashboard::PutNumber("Auton Phase", 0);
   frc::SmartDashboard::PutBoolean("Pickup Ball End", false);
   frc::SmartDashboard::PutBoolean("Pickup Ball Start", false);
+  frc::SmartDashboard::PutBoolean("Galactic Search", true);
   //frc::SmartDashboard::PutNumber("Starting # of Balls", 3);
 
   m_ahrs->ZeroYaw();
@@ -54,19 +55,27 @@ void Robot::AutonomousInit()
   //auton_end =   1;//(int)frc::SmartDashboard::GetData("End Auton");
   //waitSeconds = 0;//(int)frc::SmartDashboard::GetData("Delay");
   //m_auton->AutonCase((int)auton_start, (int)auton_end); // the parameters change based on what auton sequence we are going to use
+  
+  //This is not seeing it
+  //autonChallenge = frc::SmartDashboard::GetData("Galactic Search");
   m_climber->Reinit();
   m_spinner->Reinit();
   m_ballIntake->Reinit();
+  frc::SmartDashboard::PutBoolean("Auton Done", false);
 }
 
 void Robot::AutonomousPeriodic() 
 {
-	// double period = (double)this->GetPeriod();
+	double period = (double)this->GetPeriod();
 	// waitSeconds += period;
 	// if (waitSeconds >= 0) { // the number 0 change based on how long we want to wait in the auton sequence
 	// 	m_auton->AutonDrive(period);
 	// }
 
+  //if (autonChallenge)
+    m_auton->GalaticSearch(period);
+  //else
+    //m_auton->AutoNav();
   
 
 

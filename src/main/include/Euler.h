@@ -115,4 +115,5 @@ class Robot : public TimedRobot {
 	//bool timeChanged = false;
 	//double waitSeconds = 0.0, timeOffset = 0.0;
 	//int auton_start, auton_end;
+	bool autonChallenge;
 };
