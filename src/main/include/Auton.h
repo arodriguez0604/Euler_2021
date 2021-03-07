@@ -9,7 +9,7 @@
 #define startDistanceFromWall   0.3048
 #define red1C3x 				1.524
 #define red1C3y					0.762
-#define red1turn1				0.546
+#define red1turn1				0.045
 #define red1D5x					3.048
 #define red1D5y					0.000
 #define red1turn2				-1.092

@@ -8,6 +8,7 @@ Auton::Auton(DalekDrive *drive, AHRS * ahrs, RaspberryPi *pi, BallIntake *ballIn
 	m_ballIntake    = ballIntake;
 
 	autonStage = 0;
+	travelled_dist = 0;
 	pickupBallStart = frc::SmartDashboard::GetData("Pickup Ball Start");
 	pickupBallEnd   = frc::SmartDashboard::GetData("Pickup Ball End");
 	//autonChallenge    = frc::SmartDashboard::GetData("Auton Challenge");
@@ -16,6 +17,7 @@ Auton::Auton(DalekDrive *drive, AHRS * ahrs, RaspberryPi *pi, BallIntake *ballIn
 }
 
 void Auton::GalaticSearch(double period) {
+	frc::SmartDashboard::PutNumber("Auton Stage", autonStage);
 	switch (autonStage) {
 		case 0:
 			if(turnToFace(red1turn1))
@@ -158,8 +160,9 @@ void Auton::AutoNav() {
 
 bool Auton::driveToCoordinates(double x, double y, double angle, double period)
 {
-	travelled_dist += m_drive->GetVelocity() * period;
-	SmartDashboard::PutNumber("velocity", m_drive->GetVelocity());
+	travelled_dist += -1 * ((WHEEL_CIRCUMFERENCE * m_drive->GetVelocity() * period) 
+	* GEAR_RATIO);
+	SmartDashboard::PutNumber("velocity", -1 * (m_drive->GetVelocity()));
 	SmartDashboard::PutNumber("period", period);
 	SmartDashboard::PutNumber("sensesd travel", travelled_dist);
 	SmartDashboard::PutNumber("angle offset", angleOffset(angle) * 180 / PI); // i think angle offset is wack
@@ -172,6 +175,7 @@ bool Auton::turnToFace(double angle)
 {
 	double prev_error = p_temp;
 	p_temp = angleOffset(angle);
+	frc::SmartDashboard::PutNumber("p_temp", p_temp);
 	if (abs(p_temp) < turningErrorThreshold) {
 		return true;
 	}
