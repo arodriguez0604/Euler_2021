@@ -90,14 +90,12 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic()
 {
-    if (m_drive) {
-	    if (m_rightStick->GetTrigger() || m_leftStick->GetTrigger()) { // JUST FOR TESTING
-		  m_pi->FollowBall();
-      frc::SmartDashboard::PutBoolean("start button pressed", true);
-      } else {
-        m_drive->TankDrive(m_leftStick, m_rightStick, true);
-        frc::SmartDashboard::PutBoolean("start button pressed", false);
-      }
+    if (m_rightStick->GetTrigger() || m_leftStick->GetTrigger()) { // JUST FOR TESTING
+    m_pi->FollowBall();
+    frc::SmartDashboard::PutBoolean("start button pressed", true);
+    } else {
+      m_drive->TankDrive(m_leftStick, m_rightStick, false);
+      frc::SmartDashboard::PutBoolean("start button pressed", false);
     }
 
 

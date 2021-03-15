@@ -13,24 +13,48 @@ Auton::Auton(DalekDrive *drive, AHRS * ahrs, RaspberryPi *pi, BallIntake *ballIn
 	pickupBallEnd   = frc::SmartDashboard::GetData("Pickup Ball End");
 	//autonChallenge    = frc::SmartDashboard::GetData("Auton Challenge");
 
-	p_temp = 0; i_temp = 0; d_temp = 0, my_temp = 0;
+	p_temp = 0; i_temp = 0; d_temp = 0;
 }
 
 void Auton::GalaticSearch(double period) {
 	frc::SmartDashboard::PutNumber("Auton Stage", autonStage);
 	switch (autonStage) {
 		case 0:
-			if(turnToFace(red1turn1))
-				autonStage++;
+			m_ballIntake->Tick(0);
+			autonStage++;
 			break;
 		case 1:
-			if(driveToCoordinates(red1C3x, red1C3y, red1turn1, period))
+			m_ballIntake->Tick(1);
+			m_pi->FollowBall();
+			if (m_ballIntake->GetBallCount() == 1)
 				autonStage++;
 			break;
+		case 2:
+			if (frc::SmartDashboard::GetNumber("X Offset", 10000) > 50) {
+				m_ballIntake->Tick(1);
+				m_pi->FollowBall();
+			}
+			else {
+				m_ballIntake->Tick(1);
+				m_drive->TankDrive(0.5, 0.5, false);
+			}
+			if (m_ballIntake->GetBallCount() == 2)
+				autonStage++;
+			break;
+		case 3:
+			m_drive->TankDrive(1.00, -1.00, false);
+			if(frc::SmartDashboard::GetNumber("X Offset", 10000) != 10000)
+				autonStage++;
+			break;
+		case 4:
+			m_ballIntake->Tick(1);
+			m_pi->FollowBall();
+			if (m_ballIntake->GetBallCount() == 3)
+				autonStage++;
+			break;		
 		default:
 			frc::SmartDashboard::PutBoolean("Auton Done", true);
 
-	frc::SmartDashboard::PutNumber("My temp", my_temp++); 
 	frc::SmartDashboard::PutNumber("Auton Stage", autonStage);
 		
 	}

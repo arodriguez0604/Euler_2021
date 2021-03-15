@@ -8,6 +8,7 @@ class BallIntake {
     BallIntake(frc::XboxController *xbox, int ballCount);
 	~BallIntake();
     void Tick();
+	void Tick(int input);
 	void Reinit();
 	void StartIntake();
 	void StopIntake();

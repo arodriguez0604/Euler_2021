@@ -51,7 +51,7 @@ class Auton {
 	AHRS *m_ahrs;
 	BallIntake *m_ballIntake;
 
-	double p_temp, i_temp, d_temp, target_x, target_y, target_ang, my_temp;
+	double p_temp, i_temp, d_temp, target_x, target_y, target_ang;
 	// eventually will need delivery mechanism
 
 	int autonStage;

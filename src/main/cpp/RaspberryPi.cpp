@@ -37,9 +37,9 @@ bool RaspberryPi::driveAdjusted(double offset, double distance, double coefficie
 		magnatude *= -1;
 	}
 	if (ratio < 1) {
-		m_drive->TankDrive(magnatude, magnatude * ratio, false);
+		m_drive->TankDrive(magnatude + 0.1, (magnatude * ratio) + 0.1, false);
 	} else {
-		m_drive->TankDrive(magnatude / ratio, magnatude, false);
+		m_drive->TankDrive((magnatude / ratio) + 0.1, magnatude + 0.1, false);
 	}
 	return false;
 }
