@@ -46,6 +46,9 @@
 #define LIMELIGHT_ADDR		"10.36.37.52:5800"
 #define LEVEL_SENSOR_ADDR   "10.36.37.??"
 
+//#define CYAN_ROBOT
+//#define BAD_JOYSTICKS
+
 // CAN BUS devices
 enum CAN_IDS {
 	LEFT_FRONT_DRIVE = 1,
@@ -61,11 +64,20 @@ enum CAN_IDS {
  };
 
 // Devices connected to driverstation
-enum DRIVER_STATION_IO {
-	XBOX = 0, 
-	LEFT_JOY = 1, 
-	RIGHT_JOY = 2
-};
+#ifndef BAD_JOYSTICKS
+	enum DRIVER_STATION_IO {
+		XBOX = 0, 
+		LEFT_JOY = 1, 
+		RIGHT_JOY = 2
+	};
+#else
+	enum DRIVER_STATION_IO {
+		XBOX = 3,
+		LEFT_JOY = 4,
+		RIGHT_JOY = 5
+	};
+#endif
+
 
 // Digitial Input
 enum DIGITAL_IO {
@@ -107,10 +119,13 @@ class Robot : public TimedRobot {
 	BallIntake *m_ballIntake;
 	Auton *m_auton;
 	AHRS *m_ahrs;
-	frc::DoubleSolenoid *m_climb_solenoid;
 	Limelight *m_limelight;
-	Climber *m_climber;
-	Spinner *m_spinner;
+	frc::DoubleSolenoid *m_climb_solenoid;
+	#ifndef CYAN_ROBOT	
+		Climber *m_climber;
+		Spinner *m_spinner;
+	#endif
+	
 
 	//bool timeChanged = false;
 	//double waitSeconds = 0.0, timeOffset = 0.0;

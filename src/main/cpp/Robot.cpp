@@ -18,8 +18,10 @@ void Robot::RobotInit()
     m_compressor  = new frc::Compressor(PCM);
 	  m_ballIntake  = new BallIntake(m_xbox);
     m_auton       = new Auton(m_drive, m_ahrs, m_pi, m_ballIntake);
-    m_climber     = new Climber(m_xbox,m_climb_solenoid);
-    m_spinner     = new Spinner(m_xbox,m_climb_solenoid);
+    #ifndef CYAN_ROBOT
+      m_climber     = new Climber(m_xbox,m_climb_solenoid);
+      m_spinner     = new Spinner(m_xbox,m_climb_solenoid);
+    #endif
     m_limelight   = new Limelight(m_drive);
   }
   catch (std::exception& e) {
@@ -58,8 +60,10 @@ void Robot::AutonomousInit()
   
   //This is not seeing it
   //autonChallenge = frc::SmartDashboard::GetData("Galactic Search");
-  m_climber->Reinit();
-  m_spinner->Reinit();
+  #ifndef CYAN_ROBOT
+    m_climber->Reinit();
+    m_spinner->Reinit();
+  #endif
   m_ballIntake->Reinit();
   frc::SmartDashboard::PutBoolean("Auton Done", false);
 }
@@ -83,9 +87,11 @@ void Robot::AutonomousPeriodic()
 
 void Robot::TeleopInit()
 {
-   m_climber->Reinit();
-   m_spinner->Reinit();
-   m_ballIntake->Reinit();
+  #ifndef CYAN_ROBOT
+    m_climber->Reinit();
+    m_spinner->Reinit();
+  #endif
+  m_ballIntake->Reinit();
 }
 
 void Robot::TeleopPeriodic()
@@ -100,8 +106,10 @@ void Robot::TeleopPeriodic()
 
 
 	m_ballIntake->Tick();  
-  m_spinner->Tick();
-  m_climber->Tick();
+  #ifndef CYAN_ROBOT
+    m_spinner->Tick();
+    m_climber->Tick();
+  #endif
   //m_limelight->Update();
   // if (m_drive) {
   //   if (m_rightStick->GetTrigger() || m_leftStick->GetTrigger()) {
@@ -123,7 +131,9 @@ void Robot::TestPeriodic()
 
 void Robot::DisabledInit()
 {
-  m_climber->DisabledInit();
+  #ifndef CYAN_ROBOT
+    m_climber->DisabledInit();
+  #endif
 }
 
 

@@ -14,50 +14,76 @@ Auton::Auton(DalekDrive *drive, AHRS * ahrs, RaspberryPi *pi, BallIntake *ballIn
 	//autonChallenge    = frc::SmartDashboard::GetData("Auton Challenge");
 
 	p_temp = 0; i_temp = 0; d_temp = 0;
+	firstBallLost = false;
+	secondBallLost = false;
+	thirdBallLost = false;
 }
 
 void Auton::GalaticSearch(double period) {
 	frc::SmartDashboard::PutNumber("Auton Stage", autonStage);
-	switch (autonStage) {
-		case 0:
-			m_ballIntake->Tick(0);
-			autonStage++;
-			break;
-		case 1:
-			m_ballIntake->Tick(1);
-			m_pi->FollowBall();
-			if (m_ballIntake->GetBallCount() == 1)
-				autonStage++;
-			break;
-		case 2:
-			if (frc::SmartDashboard::GetNumber("X Offset", 10000) > 50) {
-				m_ballIntake->Tick(1);
-				m_pi->FollowBall();
-			}
-			else {
-				m_ballIntake->Tick(1);
-				m_drive->TankDrive(0.5, 0.5, false);
-			}
-			if (m_ballIntake->GetBallCount() == 2)
-				autonStage++;
-			break;
-		case 3:
-			m_drive->TankDrive(1.00, -1.00, false);
-			if(frc::SmartDashboard::GetNumber("X Offset", 10000) != 10000)
-				autonStage++;
-			break;
-		case 4:
-			m_ballIntake->Tick(1);
-			m_pi->FollowBall();
-			if (m_ballIntake->GetBallCount() == 3)
-				autonStage++;
-			break;		
-		default:
-			frc::SmartDashboard::PutBoolean("Auton Done", true);
+	// switch (autonStage) {
+	// 	case 0:
+	// 		m_ballIntake->Tick(0);
+	// 		autonStage++;
+	// 		break;
+	// 	case 1:
+	// 		// if (frc::SmartDashboard::GetNumber("X Offset", 10000) > 50 && !firstBallLost) {
+	// 		 	m_ballIntake->Tick(1);
+	// 		 	m_pi->FollowBall();
+	// 		// }
+	// 		// else {
+	// 		// 	firstBallLost = true;
+	// 		//  	m_ballIntake->Tick(1);
+	// 		//  	m_drive->TankDrive(0.5, 0.5, false);
+	// 		// }			
+	// 		if (m_ballIntake->GetBallCount() == 1)
+	// 			autonStage++;
+	// 		break;
+	// 	case 2:
+	// 		m_ballIntake->Tick(1);
+	// 		m_drive->TankDrive(0.75, 0.75, false);
+	// 		if (m_ballIntake->GetBallCount() == 2)
+	// 			autonStage++;
+	// 		break;
+			
+	// 	// case 2:
+	// 	// 	if (frc::SmartDashboard::GetNumber("X Offset", 10000) > 50) {
+	// 	// 		m_ballIntake->Tick(1);
+	// 	// 		m_pi->FollowBall();
+	// 	// 	}
+	// 	// 	else {
+	// 	// 		m_ballIntake->Tick(1);
+	// 	// 		m_drive->TankDrive(0.5, 0.5, false);
+	// 	// 	}
+	// 	// 	if (m_ballIntake->GetBallCount() == 2)
+	// 	// 		autonStage++;
+	// 	// 	break;
 
-	frc::SmartDashboard::PutNumber("Auton Stage", autonStage);
+	// 	case 3:
+	// 		m_drive->TankDrive(1.00, -1.00, false);
+	// 		if(abs(frc::SmartDashboard::GetNumber("X Offset", 10000)) != 10000)
+	// 			autonStage++;
+	// 		break;
+	// 	case 4:
+	// 		if (abs(frc::SmartDashboard::GetNumber("X Offset", 10000)) > 50 && !firstBallLost) {
+	// 			m_ballIntake->Tick(1);
+	// 			m_pi->FollowBall();
+	// 		}
+	// 		else {
+	// 			firstBallLost = true;
+	// 			m_ballIntake->Tick(1);
+	// 			m_drive->TankDrive(0.5, 0.5, false);
+	// 		}			
+	// 		if (m_ballIntake->GetBallCount() == 3)
+	// 			autonStage++;
+	// 		break;	
+	// 	default:
+	// 		frc::SmartDashboard::PutBoolean("Auton Done", true);
+
+	// frc::SmartDashboard::PutNumber("Auton Stage", autonStage);
+	// frc::SmartDashboard::PutBoolean("First Ball Lost", firstBallLost);
 		
-	}
+	// }
 }
 
 void Auton::AutoNav() {

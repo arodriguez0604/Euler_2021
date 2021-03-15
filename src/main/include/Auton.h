@@ -56,7 +56,7 @@ class Auton {
 
 	int autonStage;
 	double exit_target_x, exit_target_y, exit_target_ang, exit_target_dist, enter_target_x, enter_target_y, enter_target_ang, enter_target_dist, travelled_dist;
-	bool pickupBallEnd, pickupBallStart;
+	bool pickupBallEnd, pickupBallStart, firstBallLost, secondBallLost, thirdBallLost;
 
 	bool driveToCoordinates(double x, double y, double angle, double period);
 	bool turnToFace(double angle);
