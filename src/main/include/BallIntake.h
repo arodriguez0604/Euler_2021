@@ -14,6 +14,7 @@ class BallIntake {
 	void StopIntake();
 	void Yeet();
 	int GetBallCount();
+	bool GetReleaseSensor();
 	
 	private:
 	WPI_TalonSRX *m_intake, *m_conveyor;

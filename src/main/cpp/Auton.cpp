@@ -14,79 +14,175 @@ Auton::Auton(DalekDrive *drive, AHRS * ahrs, RaspberryPi *pi, BallIntake *ballIn
 	//autonChallenge    = frc::SmartDashboard::GetData("Auton Challenge");
 
 	p_temp = 0; i_temp = 0; d_temp = 0;
+	period = 0;
 	firstBallLost = false;
 	secondBallLost = false;
 	thirdBallLost = false;
 }
 
-void Auton::GalaticSearch(double period) {
+void Auton::GalaticSearch() {
 	frc::SmartDashboard::PutNumber("Auton Stage", autonStage);
-	// switch (autonStage) {
-	// 	case 0:
-	// 		m_ballIntake->Tick(0);
-	// 		autonStage++;
-	// 		break;
-	// 	case 1:
-	// 		// if (frc::SmartDashboard::GetNumber("X Offset", 10000) > 50 && !firstBallLost) {
-	// 		 	m_ballIntake->Tick(1);
-	// 		 	m_pi->FollowBall();
-	// 		// }
-	// 		// else {
-	// 		// 	firstBallLost = true;
-	// 		//  	m_ballIntake->Tick(1);
-	// 		//  	m_drive->TankDrive(0.5, 0.5, false);
-	// 		// }			
-	// 		if (m_ballIntake->GetBallCount() == 1)
-	// 			autonStage++;
-	// 		break;
-	// 	case 2:
-	// 		m_ballIntake->Tick(1);
-	// 		m_drive->TankDrive(0.75, 0.75, false);
-	// 		if (m_ballIntake->GetBallCount() == 2)
-	// 			autonStage++;
-	// 		break;
-			
-	// 	// case 2:
-	// 	// 	if (frc::SmartDashboard::GetNumber("X Offset", 10000) > 50) {
-	// 	// 		m_ballIntake->Tick(1);
-	// 	// 		m_pi->FollowBall();
-	// 	// 	}
-	// 	// 	else {
-	// 	// 		m_ballIntake->Tick(1);
-	// 	// 		m_drive->TankDrive(0.5, 0.5, false);
-	// 	// 	}
-	// 	// 	if (m_ballIntake->GetBallCount() == 2)
-	// 	// 		autonStage++;
-	// 	// 	break;
+	switch (autonStage) {
+		case 0:
+			m_ballIntake->Tick(0);
+			autonStage++;
+			break;
+		case 1:
+			if ((frc::SmartDashboard::GetNumber("Distance", -1) > 1 || frc::SmartDashboard::GetNumber("Distance", -1) == -1) && !firstBallLost) {
+			 	m_ballIntake->Tick(1);
+			 	m_pi->FollowBall();
+				frc::SmartDashboard::PutBoolean("Case", true);
+			}
+			// else if (!m_ballIntake->GetReleaseSensor()) {
+			// 	m_drive->TankDrive(0.0, 0.0, false);
+			// }
+			else {
+				firstBallLost = true;
+			 	m_ballIntake->Tick(1);
+			 	m_drive->TankDrive(-0.5, -0.5, false);
+				frc::SmartDashboard::PutBoolean("Case", false);
+			}			
+			if (m_ballIntake->GetBallCount() == 1)
+				autonStage++;
+			break;
 
-	// 	case 3:
-	// 		m_drive->TankDrive(1.00, -1.00, false);
-	// 		if(abs(frc::SmartDashboard::GetNumber("X Offset", 10000)) != 10000)
-	// 			autonStage++;
-	// 		break;
-	// 	case 4:
-	// 		if (abs(frc::SmartDashboard::GetNumber("X Offset", 10000)) > 50 && !firstBallLost) {
-	// 			m_ballIntake->Tick(1);
-	// 			m_pi->FollowBall();
-	// 		}
-	// 		else {
-	// 			firstBallLost = true;
-	// 			m_ballIntake->Tick(1);
-	// 			m_drive->TankDrive(0.5, 0.5, false);
-	// 		}			
-	// 		if (m_ballIntake->GetBallCount() == 3)
-	// 			autonStage++;
-	// 		break;	
-	// 	default:
-	// 		frc::SmartDashboard::PutBoolean("Auton Done", true);
+		// case 2:
+		// 	m_ballIntake->Tick(1);
+		// 	m_drive->TankDrive(0.75, 0.75, false);
+		// 	if (m_ballIntake->GetBallCount() == 2)
+		// 		autonStage++;
+		// 	break;
+		case 2:
+			m_drive->TankDrive(1.0, -1.0, false);
+			if(frc::SmartDashboard::GetNumber("X Offset", 10000) != 10000)
+				autonStage++;
+			break;
+		case 3:
+			if ((frc::SmartDashboard::GetNumber("Distance", -1) > 2.5 || frc::SmartDashboard::GetNumber("Distance", -1) == -1) && !secondBallLost) {
+				m_ballIntake->Tick(1);
+				m_pi->FollowBall();
+			}
+			else {
+				secondBallLost = true;
+				m_ballIntake->Tick(1);
+				m_drive->TankDrive(-0.15, -0.15, false);
+			}
+			if (m_ballIntake->GetBallCount() == 2)
+				autonStage++;
+			break;
 
-	// frc::SmartDashboard::PutNumber("Auton Stage", autonStage);
-	// frc::SmartDashboard::PutBoolean("First Ball Lost", firstBallLost);
-		
-	// }
+		case 4:
+			m_drive->TankDrive(1.0, -1.0, false);
+			if(frc::SmartDashboard::GetNumber("X Offset", 10000) != 10000)
+				autonStage++;
+			break;
+		case 5:
+			if ((frc::SmartDashboard::GetNumber("Distance", -1) > 1 || frc::SmartDashboard::GetNumber("Distance", -1) == -1) && !thirdBallLost) {
+				m_ballIntake->Tick(1);
+				m_pi->FollowBall();
+			}
+			else {
+				thirdBallLost = true;
+				m_ballIntake->Tick(1);
+				m_drive->TankDrive(-0.5, -0.5, false);
+			}			
+			if (m_ballIntake->GetBallCount() == 3)
+				autonStage++;
+			break;	
+		default:
+			frc::SmartDashboard::PutBoolean("Auton Done", true);
+	}
+	frc::SmartDashboard::PutNumber("Auton Stage", autonStage);
+	//frc::SmartDashboard::PutBoolean("First Ball Lost", firstBallLost);
+	// std::cout << "First: " << firstBallLost << "\n";
+	// std::cout << "Second: " << secondBallLost << "\n";
+	// std::cout << "Third: " << thirdBallLost << "\n";
+	// std::cout << "\n";
 }
 
-void Auton::AutoNav() {
+void Auton::AutoNav(double badPeriod, int path) {
+	std::cout << "Period: " << badPeriod << std::endl;
+	period += badPeriod;
+	//be careful with this the first time
+	switch (path) {
+		//barrel
+		case 0:
+			if (period < 1.00)
+				m_drive->TankDrive(-1.00, -1.00, false);
+			else if (period < 3.15)
+				m_drive->TankDrive(-1.00, -0.30, false);
+			else if (period < 4.00)
+				m_drive->TankDrive(-1.00, -1.00, false);
+			else if (period < 5.99)
+				m_drive->TankDrive(-0.30 -1.00, false);
+			else if (period < 6.20)
+				m_drive->TankDrive(-1.00, -1.00, false);
+			else if (period < 7.25)
+				m_drive->TankDrive(-0.30, -1.00, false);
+			else if (period < 9.10)
+				m_drive->TankDrive(-1.00, -1.00, false);
+			else
+				m_drive->TankDrive(0.00, 0.00, false); 
+
+		//slamlom
+		case 1:
+			if (period < 0.70)
+				m_drive->TankDrive(-1.00, -1.00, false);
+			else if (period < 1.75)
+				m_drive->TankDrive(-0.30, -0.90, false);
+			else if (period < 2.38)
+				m_drive->TankDrive(-1.00, -0.30, false);
+			else if (period < 3.70)
+				m_drive->TankDrive(-1.00, -1.00, false);
+			else if (period < 4.40)
+				m_drive->TankDrive(-0.30, -0.75, false);
+			else if (period < 7.50)
+				m_drive->TankDrive(-1.00, -0.152, false);
+			else if (period < 8.50)
+				m_drive->TankDrive(-1.00, -0.30, false);
+			else if (period < 9.70)
+				m_drive->TankDrive(-1.00, -1.00, false);
+			else if (period < 10.40)
+				m_drive->TankDrive(-1.00, -0.30, false);
+			else if (period < 10.60)
+				m_drive->TankDrive(-0.30, -1.00, false);
+			else
+				m_drive->TankDrive(0.00, 0.00, false);
+
+
+		//bounce
+		case 2:
+			if (period < 0.65)
+				m_drive->TankDrive(-1.00, -1.00, false);
+			else if (period < 1.30)
+				m_drive->TankDrive(-0.80, -1.00, false);
+			else if (period < 1.70)
+				m_drive->TankDrive(1.00, 1.00, false);
+			else if (period < 2.30)
+				m_drive->TankDrive(1.00, 0.90, false);
+			else if (period < 3.15)
+				m_drive->TankDrive(1.00, 0.00, false);
+			else if (period < 3.60)
+				m_drive->TankDrive(1.00, 0.25, false);
+			else if (period < 4.40)
+				m_drive->TankDrive(1.00, 1.00, false);
+			else if (period < 5.35)
+				m_drive->TankDrive(-1.00, -1.00, false);
+			else if (period < 6.60)
+				m_drive->TankDrive(-0.25, -1.00, false);
+			else if (period < 7.35)
+				m_drive->TankDrive(-1.00, -1.00, false);
+			else if (period < 7.70)
+				m_drive->TankDrive(-0.25, -1.00, false);
+			else if (period < 8.30)
+				m_drive->TankDrive(-1.00, -1.00, false);
+			else if (period < 9.00)
+				m_drive->TankDrive(0.30, 1.00, false);
+			else if (period < 10.00)
+				m_drive->TankDrive(0.00, 0.00, false);
+			else
+				m_drive->TankDrive(0.00, 0.00, false);
+	}
 
 }
 

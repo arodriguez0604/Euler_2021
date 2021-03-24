@@ -37,6 +37,7 @@ void Robot::RobotInit()
   frc::SmartDashboard::PutBoolean("Pickup Ball End", false);
   frc::SmartDashboard::PutBoolean("Pickup Ball Start", false);
   frc::SmartDashboard::PutBoolean("Galactic Search", true);
+  frc::SmartDashboard::PutNumber("Path", 0);
   //frc::SmartDashboard::PutNumber("Starting # of Balls", 3);
 
   m_ahrs->ZeroYaw();
@@ -76,10 +77,17 @@ void Robot::AutonomousPeriodic()
 	// 	m_auton->AutonDrive(period);
 	// }
 
-  //if (autonChallenge)
-    m_auton->GalaticSearch(period);
-  //else
-    //m_auton->AutoNav();
+
+  //0 - Barrel Racing
+  //1 - Slalom Path
+  //2 - Bounce Path
+
+  int path = frc::SmartDashboard::GetNumber("Path", 0);
+
+  // if (autonChallenge)
+  //   m_auton->GalaticSearch();
+  // else
+    m_auton->AutoNav(period, path);
   
 
 
