@@ -101,7 +101,8 @@ void Auton::GalaticSearch() {
 }
 
 void Auton::AutoNav(double badPeriod, int path) {
-	std::cout << "Period: " << badPeriod << std::endl;
+	std::cout << "Bad-Period: " << badPeriod << std::endl;
+	std::cout << "Period: " << period << std::endl;
 	period += badPeriod;
 	//be careful with this the first time
 	switch (path) {
@@ -114,7 +115,7 @@ void Auton::AutoNav(double badPeriod, int path) {
 			else if (period < 4.00)
 				m_drive->TankDrive(-1.00, -1.00, false);
 			else if (period < 5.99)
-				m_drive->TankDrive(-0.30 -1.00, false);
+				m_drive->TankDrive(-0.30, -1.00, false);
 			else if (period < 6.20)
 				m_drive->TankDrive(-1.00, -1.00, false);
 			else if (period < 7.25)
@@ -123,6 +124,7 @@ void Auton::AutoNav(double badPeriod, int path) {
 				m_drive->TankDrive(-1.00, -1.00, false);
 			else
 				m_drive->TankDrive(0.00, 0.00, false); 
+			break;
 
 		//slamlom
 		case 1:
@@ -148,7 +150,7 @@ void Auton::AutoNav(double badPeriod, int path) {
 				m_drive->TankDrive(-0.30, -1.00, false);
 			else
 				m_drive->TankDrive(0.00, 0.00, false);
-
+			break;
 
 		//bounce
 		case 2:
@@ -182,6 +184,7 @@ void Auton::AutoNav(double badPeriod, int path) {
 				m_drive->TankDrive(0.00, 0.00, false);
 			else
 				m_drive->TankDrive(0.00, 0.00, false);
+			break;
 	}
 
 }

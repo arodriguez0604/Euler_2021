@@ -67,6 +67,7 @@ void Robot::AutonomousInit()
   #endif
   m_ballIntake->Reinit();
   frc::SmartDashboard::PutBoolean("Auton Done", false);
+  path = frc::SmartDashboard::GetNumber("Path", 0);
 }
 
 void Robot::AutonomousPeriodic() 
@@ -82,12 +83,10 @@ void Robot::AutonomousPeriodic()
   //1 - Slalom Path
   //2 - Bounce Path
 
-  int path = frc::SmartDashboard::GetNumber("Path", 0);
-
   // if (autonChallenge)
   //   m_auton->GalaticSearch();
   // else
-    m_auton->AutoNav(period, path);
+  m_auton->AutoNav(period, path);
   
 
 

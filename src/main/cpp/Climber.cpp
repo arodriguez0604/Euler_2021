@@ -52,6 +52,9 @@ void
 Climber::Tick()
 {
     frc::SmartDashboard::PutBoolean("ratchet solenoid:", m_ratchet_solenoid->Get());
+    //if (m_xbox->GetBumper(frc::GenericHID::kLeftHand))
+        m_trolley->Set(1.00);
+
     if (m_xbox->GetBackButtonPressed()) {
         if (m_climb_solenoid->Get() == frc::DoubleSolenoid::kReverse) {
             m_climb_solenoid->Set(frc::DoubleSolenoid::kForward);
