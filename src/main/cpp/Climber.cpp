@@ -3,6 +3,8 @@
 Climber::Climber(frc::XboxController *xbox, frc::DoubleSolenoid *climb_solenoid)
 {
     init(xbox, climb_solenoid);
+    frc::SmartDashboard::PutNumber("Right Joystick Thing X", 0);
+    frc::SmartDashboard::PutNumber("Right Joystick Thing Y", 0);
 }
 
 void
@@ -52,8 +54,7 @@ void
 Climber::Tick()
 {
     frc::SmartDashboard::PutBoolean("ratchet solenoid:", m_ratchet_solenoid->Get());
-    //if (m_xbox->GetBumper(frc::GenericHID::kLeftHand))
-        m_trolley->Set(1.00);
+    frc::SmartDashboard::PutNumber("Xbox POV: ", m_xbox->GetPOV(0));
 
     if (m_xbox->GetBackButtonPressed()) {
         if (m_climb_solenoid->Get() == frc::DoubleSolenoid::kReverse) {
@@ -75,11 +76,33 @@ Climber::Tick()
         m_lift->Set(0.0);
     }
 
-    if (m_climb_solenoid->Get() == frc::DoubleSolenoid::kForward) {
-        m_trolley->Set(m_xbox->GetX(frc::GenericHID::kRightHand) * -1);
-    } else {
-        m_trolley->Set(0.0);
-    }
+    //if (m_climb_solenoid->Get() == frc::DoubleSolenoid::kForward) {
+        if (m_xbox->GetX(frc::GenericHID::kRightHand) < -0.5) {
+            m_trolley->Set(0.60);
+        }
+        else if (m_xbox->GetY(frc::GenericHID::kRightHand) > 0.5) {
+            m_trolley->Set(0.77);
+        }
+        else if (m_xbox->GetX(frc::GenericHID::kRightHand) > 0.5) {
+            m_trolley->Set(0.85);
+        }
+        else if (m_xbox->GetY(frc::GenericHID::kRightHand) < -0.5) {
+            m_trolley->Set(0.30);
+        }
+        else if (m_xbox->GetY(frc::GenericHID::kLeftHand) < -0.5) {
+            m_trolley->Set(-0.50);
+        }
+        else {
+            m_trolley->Set(0.00);
+        }
+
+        frc::SmartDashboard::PutNumber("Right Joystick Thing X", m_xbox->GetX(frc::GenericHID::kRightHand));
+        frc::SmartDashboard::PutNumber("Right Joystick Thing Y", m_xbox->GetY(frc::GenericHID::kRightHand));
+        
+        //m_trolley->Set(m_xbox->GetX(frc::GenericHID::kRightHand) * -1);
+   // } else {
+        //m_trolley->Set(0.0);
+    //}
 }
 
 void

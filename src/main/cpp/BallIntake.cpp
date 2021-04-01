@@ -126,7 +126,7 @@ BallIntake::Tick()
 			triggerHeld = false;
 		}
 
-    	if (triggerOn && m_releaseSensor->Get()) {
+    	if (triggerOn && !m_releaseSensor->Get()) {
         	switch (pickupPhase) {
         	    case 0:
 	    	        if (!m_pickupSensor->Get()) {
@@ -166,15 +166,14 @@ BallIntake::Tick()
 			}
     	}
 	}
-	if (seeBall && m_releaseSensor->Get() && ballCount > 0) {
+	if (seeBall && !m_releaseSensor->Get() && ballCount > 0) {
 		ballCount--;
 	}
-	seeBall = !m_releaseSensor->Get();
+	seeBall = m_releaseSensor->Get();
 }
 
 //This is used for auton Galatic Drive
-void
-BallIntake::Tick(int input) {
+void BallIntake::Tick(int input) {
 	//SmartDashboard::PutBoolean("Input Sensed", m_pickupSensor->Get());
 	//SmartDashboard::PutBoolean("Output Sensed", m_releaseSensor->Get());
 	SmartDashboard::PutNumber("ballCount", GetBallCount());
@@ -189,7 +188,7 @@ BallIntake::Tick(int input) {
       		intake_solenoid->Set(frc::DoubleSolenoid::kForward);
     	}
  	}
-	else if (triggerOn && m_releaseSensor->Get()) {
+	else if (triggerOn && !m_releaseSensor->Get()) {
 		switch (pickupPhase) {
 					case 0:
 						if (!m_pickupSensor->Get()) {
@@ -199,7 +198,7 @@ BallIntake::Tick(int input) {
 							m_intake->Set(0);
 						} else {
 							intake_solenoid->Set(frc::DoubleSolenoid::kForward);
-							m_intake->Set(0.5);
+							m_intake->Set(0.50);
 							m_conveyor->Set(0);
 						}
 						break;
@@ -207,7 +206,7 @@ BallIntake::Tick(int input) {
 						if (m_pickupSensor->Get()) {
 							pickupPhase++;
 							m_conveyor->Set(0);
-							m_intake->Set(0);
+							m_intake->Set(1.00);
 						} else {
 							m_conveyor->Set(0.5 + .075 * ballCount);
 							m_intake->Set(0);
@@ -221,7 +220,7 @@ BallIntake::Tick(int input) {
 							m_intake->Set(0);
 						} else {
 							intake_solenoid->Set(frc::DoubleSolenoid::kForward);
-							m_intake->Set(0.5);
+							m_intake->Set(0.75);
 							m_conveyor->Set(0);
 						}
 						break;
@@ -229,7 +228,7 @@ BallIntake::Tick(int input) {
 						if (m_pickupSensor->Get()) {
 							pickupPhase++;
 							m_conveyor->Set(0);
-							m_intake->Set(0);
+							m_intake->Set(0.75);
 						} else {
 							m_conveyor->Set(0.5 + .075 * ballCount);
 							m_intake->Set(0);
@@ -243,7 +242,7 @@ BallIntake::Tick(int input) {
 							m_intake->Set(0);
 						} else {
 							intake_solenoid->Set(frc::DoubleSolenoid::kForward);
-							m_intake->Set(0.5);
+							m_intake->Set(0.75);
 							m_conveyor->Set(0);
 						}
 						break;
@@ -267,10 +266,10 @@ BallIntake::Tick(int input) {
 					m_intake->Set(0);
 				}
 			}
-	if (seeBall && m_releaseSensor->Get() && ballCount > 0) {
+	if (seeBall && !m_releaseSensor->Get() && ballCount > 0) {
 		ballCount--;
 	}
-	seeBall = !m_releaseSensor->Get();
+	seeBall = m_releaseSensor->Get();
 }
 
 bool 

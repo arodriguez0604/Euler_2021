@@ -7,6 +7,7 @@ void Robot::RobotInit()
   cs::AxisCamera camera = CameraServer::GetInstance()->AddAxisCamera(FORWARD_CAMERA);  // Initialize Camera
   // camera.SetResolution(160, 90);    // Only use these two lines if needed
   // camera.SetFPS(15);
+  
   try {
     m_xbox        = new frc::XboxController(XBOX);
     m_leftStick   = new frc::Joystick(LEFT_JOY);
@@ -83,10 +84,10 @@ void Robot::AutonomousPeriodic()
   //1 - Slalom Path
   //2 - Bounce Path
 
-  // if (autonChallenge)
-  //   m_auton->GalaticSearch();
+  //if (autonChallenge)
+    m_auton->GalaticSearch(period);
   // else
-  m_auton->AutoNav(period, path);
+  // m_auton->AutoNav(period, path);
   
 
 

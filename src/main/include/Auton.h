@@ -39,7 +39,7 @@ using namespace frc;
 class Auton {
 	public:
 	Auton(DalekDrive *drive, AHRS * ahrs, RaspberryPi *pi, BallIntake *ballIntake);
-	void GalaticSearch();
+	void GalaticSearch(double period);
 	void AutoNav(double period, int path);
 	
 	//void AutonCase(int begin, int end); // this must be called before AutonDrive()
@@ -51,7 +51,7 @@ class Auton {
 	AHRS *m_ahrs;
 	BallIntake *m_ballIntake;
 
-	double p_temp, i_temp, d_temp, target_x, target_y, target_ang;
+	double p_temp, i_temp, d_temp, target_x, target_y, target_ang, myPeriod;
 	// eventually will need delivery mechanism
 
 	int autonStage;

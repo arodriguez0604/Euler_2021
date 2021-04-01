@@ -20,7 +20,7 @@ Auton::Auton(DalekDrive *drive, AHRS * ahrs, RaspberryPi *pi, BallIntake *ballIn
 	thirdBallLost = false;
 }
 
-void Auton::GalaticSearch() {
+void Auton::GalaticSearch(double period) {
 	frc::SmartDashboard::PutNumber("Auton Stage", autonStage);
 	switch (autonStage) {
 		case 0:
@@ -28,7 +28,7 @@ void Auton::GalaticSearch() {
 			autonStage++;
 			break;
 		case 1:
-			if ((frc::SmartDashboard::GetNumber("Distance", -1) > 1 || frc::SmartDashboard::GetNumber("Distance", -1) == -1) && !firstBallLost) {
+			if ((frc::SmartDashboard::GetNumber("Distance", -1) > 3.7 || frc::SmartDashboard::GetNumber("Distance", -1) == -1) && !firstBallLost) {
 			 	m_ballIntake->Tick(1);
 			 	m_pi->FollowBall();
 				frc::SmartDashboard::PutBoolean("Case", true);
@@ -39,33 +39,26 @@ void Auton::GalaticSearch() {
 			else {
 				firstBallLost = true;
 			 	m_ballIntake->Tick(1);
-			 	m_drive->TankDrive(-0.5, -0.5, false);
-				frc::SmartDashboard::PutBoolean("Case", false);
+			 	m_drive->TankDrive(-0.07, -0.01, false);
+				//frc::SmartDashboard::PutBoolean("Case", false);
 			}			
 			if (m_ballIntake->GetBallCount() == 1)
 				autonStage++;
 			break;
-
-		// case 2:
-		// 	m_ballIntake->Tick(1);
-		// 	m_drive->TankDrive(0.75, 0.75, false);
-		// 	if (m_ballIntake->GetBallCount() == 2)
-		// 		autonStage++;
-		// 	break;
 		case 2:
 			m_drive->TankDrive(1.0, -1.0, false);
 			if(frc::SmartDashboard::GetNumber("X Offset", 10000) != 10000)
 				autonStage++;
 			break;
 		case 3:
-			if ((frc::SmartDashboard::GetNumber("Distance", -1) > 2.5 || frc::SmartDashboard::GetNumber("Distance", -1) == -1) && !secondBallLost) {
+			if ((frc::SmartDashboard::GetNumber("Distance", -1) > 3.7 || frc::SmartDashboard::GetNumber("Distance", -1) == -1) && !secondBallLost) {
 				m_ballIntake->Tick(1);
 				m_pi->FollowBall();
 			}
 			else {
 				secondBallLost = true;
 				m_ballIntake->Tick(1);
-				m_drive->TankDrive(-0.15, -0.15, false);
+				m_drive->TankDrive(-0.07, -0.05, false);
 			}
 			if (m_ballIntake->GetBallCount() == 2)
 				autonStage++;
@@ -77,20 +70,41 @@ void Auton::GalaticSearch() {
 				autonStage++;
 			break;
 		case 5:
-			if ((frc::SmartDashboard::GetNumber("Distance", -1) > 1 || frc::SmartDashboard::GetNumber("Distance", -1) == -1) && !thirdBallLost) {
+			if ((frc::SmartDashboard::GetNumber("Distance", -1) > 3.5 || frc::SmartDashboard::GetNumber("Distance", -1) == -1) && !thirdBallLost) {
 				m_ballIntake->Tick(1);
 				m_pi->FollowBall();
 			}
 			else {
 				thirdBallLost = true;
 				m_ballIntake->Tick(1);
-				m_drive->TankDrive(-0.5, -0.5, false);
+				m_drive->TankDrive(-0.07, -0.07, false);
 			}			
-			if (m_ballIntake->GetBallCount() == 3)
+			if (m_ballIntake->GetBallCount() == 3) {
 				autonStage++;
-			break;	
+				myPeriod = 0;
+			}
+			break;
+		case 6:
+			myPeriod += period;
+			if (myPeriod < 1.20)
+				m_drive->TankDrive(0.00, -1.00, false);
+			else {
+				autonStage++;
+				myPeriod = 0;
+			}
+			break;
+		case 7:
+			myPeriod += period;
+			if (myPeriod < 2.00)
+				m_drive->TankDrive(-1.00, -1.00, false);
+			else {
+				autonStage++;
+				myPeriod = 0;
+			}
+			break;
 		default:
 			frc::SmartDashboard::PutBoolean("Auton Done", true);
+			break;
 	}
 	frc::SmartDashboard::PutNumber("Auton Stage", autonStage);
 	//frc::SmartDashboard::PutBoolean("First Ball Lost", firstBallLost);
@@ -108,15 +122,17 @@ void Auton::AutoNav(double badPeriod, int path) {
 	switch (path) {
 		//barrel
 		case 0:
-			if (period < 1.00)
+			if (period < 1.12)
 				m_drive->TankDrive(-1.00, -1.00, false);
-			else if (period < 3.15)
+			else if (period < 3.45)
 				m_drive->TankDrive(-1.00, -0.30, false);
-			else if (period < 4.00)
-				m_drive->TankDrive(-1.00, -1.00, false);
-			else if (period < 5.99)
+			else if (period < 6.15)
+				m_drive->TankDrive(-1.00, 0.07, false);
+			else if (period < 7.20)
 				m_drive->TankDrive(-0.30, -1.00, false);
 			else if (period < 6.20)
+
+
 				m_drive->TankDrive(-1.00, -1.00, false);
 			else if (period < 7.25)
 				m_drive->TankDrive(-0.30, -1.00, false);
