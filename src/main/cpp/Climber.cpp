@@ -15,7 +15,7 @@ Climber:: init(frc::XboxController *xbox, DoubleSolenoid *climb_solenoid)
     if(m_trolley == NULL)
         std::bad_alloc();
     m_trolley->ConfigFactoryDefault();
-    m_lift = new WPI_TalonSRX(LIFT);
+    m_lift = new WPI_TalonSRX(15); //temp: LIFT
     if(m_lift == NULL)
         std::bad_alloc();
     m_lift->ConfigFactoryDefault();
@@ -76,33 +76,33 @@ Climber::Tick()
         m_lift->Set(0.0);
     }
 
-    //if (m_climb_solenoid->Get() == frc::DoubleSolenoid::kForward) {
-        if (m_xbox->GetX(frc::GenericHID::kRightHand) < -0.5) {
-            m_trolley->Set(0.60);
-        }
-        else if (m_xbox->GetY(frc::GenericHID::kRightHand) > 0.5) {
-            m_trolley->Set(0.77);
-        }
-        else if (m_xbox->GetX(frc::GenericHID::kRightHand) > 0.5) {
-            m_trolley->Set(0.85);
-        }
-        else if (m_xbox->GetY(frc::GenericHID::kRightHand) < -0.5) {
-            m_trolley->Set(0.30);
-        }
-        else if (m_xbox->GetY(frc::GenericHID::kLeftHand) < -0.5) {
-            m_trolley->Set(-0.50);
-        }
-        else {
-            m_trolley->Set(0.00);
-        }
+    if (m_climb_solenoid->Get() == frc::DoubleSolenoid::kForward) {
+        // if (m_xbox->GetX(frc::GenericHID::kRightHand) < -0.5) {
+        //     m_trolley->Set(0.60);
+        // }
+        // else if (m_xbox->GetY(frc::GenericHID::kRightHand) > 0.5) {
+        //     m_trolley->Set(0.77);
+        // }
+        // else if (m_xbox->GetX(frc::GenericHID::kRightHand) > 0.5) {
+        //     m_trolley->Set(0.85);
+        // }
+        // else if (m_xbox->GetY(frc::GenericHID::kRightHand) < -0.5) {
+        //     m_trolley->Set(0.30);
+        // }
+        // else if (m_xbox->GetY(frc::GenericHID::kLeftHand) < -0.5) {
+        //     m_trolley->Set(-0.50);
+        // }
+        // else {
+        //     m_trolley->Set(0.00);
+        // }
 
         frc::SmartDashboard::PutNumber("Right Joystick Thing X", m_xbox->GetX(frc::GenericHID::kRightHand));
         frc::SmartDashboard::PutNumber("Right Joystick Thing Y", m_xbox->GetY(frc::GenericHID::kRightHand));
         
-        //m_trolley->Set(m_xbox->GetX(frc::GenericHID::kRightHand) * -1);
-   // } else {
-        //m_trolley->Set(0.0);
-    //}
+        m_trolley->Set(m_xbox->GetX(frc::GenericHID::kRightHand) * -1);
+   } else {
+        m_trolley->Set(0.0);
+    }
 }
 
 void

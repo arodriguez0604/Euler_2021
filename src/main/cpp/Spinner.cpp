@@ -45,28 +45,47 @@ void Spinner::Reinit()
 void
 Spinner::Tick()
 {
-    float encoderCnt = m_spinner->GetSensorCollection().GetQuadraturePosition();
+    // float encoderCnt = m_spinner->GetSensorCollection().GetQuadraturePosition();
 
-    frc::SmartDashboard::PutNumber("SpinnerEncoder", encoderCnt);
-    frc::SmartDashboard::PutNumber("Approx Color Wheel rotations", encoderCnt/NUM_TICKS_PER_COLOR_WHEEL_REV);
+    // frc::SmartDashboard::PutNumber("SpinnerEncoder", encoderCnt);
+    // frc::SmartDashboard::PutNumber("Approx Color Wheel rotations", encoderCnt/NUM_TICKS_PER_COLOR_WHEEL_REV);
 
-    if (m_xbox->GetYButtonPressed()) {
-        if (m_spinner_solenoid->Get() == frc::DoubleSolenoid::kForward){
-            m_climb_solenoid->Set(frc::DoubleSolenoid::kOff);
-            m_spinner_solenoid->Set(frc::DoubleSolenoid::kReverse);
-        } else {
-            m_climb_solenoid->Set(frc::DoubleSolenoid::kReverse);
-            m_spinner_solenoid->Set(frc::DoubleSolenoid::kForward);
-        }
-     }
+    // if (m_xbox->GetYButtonPressed()) {
+    //     if (m_spinner_solenoid->Get() == frc::DoubleSolenoid::kForward){
+    //         m_climb_solenoid->Set(frc::DoubleSolenoid::kOff);
+    //         m_spinner_solenoid->Set(frc::DoubleSolenoid::kReverse);
+    //     } else {
+    //         m_climb_solenoid->Set(frc::DoubleSolenoid::kReverse);
+    //         m_spinner_solenoid->Set(frc::DoubleSolenoid::kForward);
+    //     }
+    //  }
 
-    if (m_spinner_solenoid->Get() == frc::DoubleSolenoid::kForward) {
-        if (m_xbox->GetXButton()) {
-            m_spinner->Set(1);
-        } else {
-            m_spinner->Set(0.0);
-        }
-    } else {
-        m_spinner->Set(0.0);
+    // if (m_spinner_solenoid->Get() == frc::DoubleSolenoid::kForward) {
+    //     if (m_xbox->GetXButton()) {
+    //         m_spinner->Set(1);
+    //     } else {
+    //         m_spinner->Set(0.0);
+    //     }
+    // } else {
+    //     m_spinner->Set(0.0);
+    // }
+
+    if (m_xbox->GetX(frc::GenericHID::kRightHand) < -0.5) {
+        m_spinner->Set(0.20); //0.65
+    }
+    else if (m_xbox->GetY(frc::GenericHID::kRightHand) > 0.5) {
+        m_spinner->Set(0.77);
+    }
+    else if (m_xbox->GetX(frc::GenericHID::kRightHand) > 0.5) {
+        m_spinner->Set(0.85);
+    }
+    // else if (m_xbox->GetY(frc::GenericHID::kRightHand) < -0.5) {
+    //     m_spinner->Set(0.30);
+    // }
+    else if (m_xbox->GetY(frc::GenericHID::kLeftHand) < -0.5) {
+        m_spinner->Set(-0.50);
+    }
+    else {
+        m_spinner->Set(0.00);
     }
 }

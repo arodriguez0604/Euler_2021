@@ -140,7 +140,16 @@ BallIntake::Tick()
 						m_conveyor->Set(0);
 					}
             	    break;
-            	case 1:
+				case 1:
+					if (m_pickupSensor->Get()) {
+						m_conveyor->Set(-0.35);
+					}
+					else {
+						pickupPhase++;
+						m_conveyor->Set(0.0);
+					}
+
+            	case 2:
             	    if (m_pickupSensor->Get()) {
      		            pickupPhase++;
 						m_conveyor->Set(0);
@@ -150,7 +159,7 @@ BallIntake::Tick()
 						m_intake->Set(0);
 					}
     	            break;
-				case 2:
+				case 3:
 					m_conveyor->Set(0);
 					m_intake->Set(0);
 					triggerOn = false;

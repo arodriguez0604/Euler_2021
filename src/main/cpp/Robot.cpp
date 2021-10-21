@@ -8,23 +8,23 @@ void Robot::RobotInit()
   // camera.SetResolution(160, 90);    // Only use these two lines if needed
   // camera.SetFPS(15);
   
-  try {
-    m_xbox        = new frc::XboxController(XBOX);
-    m_leftStick   = new frc::Joystick(LEFT_JOY);
-    m_rightStick  = new frc::Joystick(RIGHT_JOY);
-    m_climb_solenoid = new frc::DoubleSolenoid(PCM, CLIMB_DEPLOY, CLIMB_EXHAUST);
-    m_drive       = new DalekDrive(LEFT_FRONT_DRIVE, LEFT_REAR_DRIVE, RIGHT_FRONT_DRIVE, RIGHT_REAR_DRIVE, DalekDrive::driveType::kDifferential);
-    m_ahrs        = new AHRS(SPI::Port::kMXP);
-    m_pi          = new RaspberryPi(m_drive);
-    m_compressor  = new frc::Compressor(PCM);
-	  m_ballIntake  = new BallIntake(m_xbox);
-    m_auton       = new Auton(m_drive, m_ahrs, m_pi, m_ballIntake);
-    #ifndef CYAN_ROBOT
-      m_climber     = new Climber(m_xbox,m_climb_solenoid);
-      m_spinner     = new Spinner(m_xbox,m_climb_solenoid);
-    #endif
-    m_limelight   = new Limelight(m_drive);
-  }
+    try {
+      m_xbox        = new frc::XboxController(XBOX);
+      m_leftStick   = new frc::Joystick(LEFT_JOY);
+      m_rightStick  = new frc::Joystick(RIGHT_JOY);
+      m_climb_solenoid = new frc::DoubleSolenoid(PCM, CLIMB_DEPLOY, CLIMB_EXHAUST);
+      m_drive       = new DalekDrive(LEFT_FRONT_DRIVE, LEFT_REAR_DRIVE, RIGHT_FRONT_DRIVE, RIGHT_REAR_DRIVE, DalekDrive::driveType::kDifferential);
+      m_ahrs        = new AHRS(SPI::Port::kMXP);
+      m_pi          = new RaspberryPi(m_drive);
+      m_compressor  = new frc::Compressor(PCM);
+      m_ballIntake  = new BallIntake(m_xbox);
+      m_auton       = new Auton(m_drive, m_ahrs, m_pi, m_ballIntake);
+      #ifndef CYAN_ROBOT
+        m_climber     = new Climber(m_xbox,m_climb_solenoid);
+        m_spinner     = new Spinner(m_xbox,m_climb_solenoid);
+      #endif
+      m_limelight   = new Limelight(m_drive);
+    }
   catch (std::exception& e) {
     std::string err_string = "Error instantiating components:  ";
     err_string += e.what();
