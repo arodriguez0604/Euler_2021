@@ -15,7 +15,7 @@ Climber:: init(frc::XboxController *xbox, DoubleSolenoid *climb_solenoid)
     if(m_trolley == NULL)
         std::bad_alloc();
     m_trolley->ConfigFactoryDefault();
-    m_lift = new WPI_TalonSRX(15); //temp: LIFT
+    m_lift = new WPI_TalonSRX(LIFT); //temp: LIFT
     if(m_lift == NULL)
         std::bad_alloc();
     m_lift->ConfigFactoryDefault();
