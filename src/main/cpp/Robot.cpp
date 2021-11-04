@@ -85,7 +85,7 @@ void Robot::AutonomousPeriodic()
   //2 - Bounce Path
 
   //if (autonChallenge)
-    m_auton->GalaticSearch(period);
+    m_auton->driveTo(10,period,0);
   // else
   // m_auton->AutoNav(period, path);
   

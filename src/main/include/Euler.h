@@ -35,6 +35,7 @@
 #include <Spinner.h>
 
 #define PI	3.14159265358979323846
+#define E 2.7182818284590452353602874713527
 
 // Mostly for documentation of the ip addresses of the 
 // devices on the robot

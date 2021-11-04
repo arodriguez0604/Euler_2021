@@ -323,16 +323,17 @@ void Auton::AutoNav(double badPeriod, int path) {
 // 	frc::SmartDashboard::PutNumber("exit dist offset", sqrt(pow(exit_target_x - m_ahrs->GetDisplacementX(), 2) + pow(exit_target_y - m_ahrs->GetDisplacementY(), 2)));
 // }
 
-bool Auton::driveToCoordinates(double x, double y, double angle, double period)
+void Auton::driveTo(double dis, double period, double recursion)
 {
 	travelled_dist += -1 * ((WHEEL_CIRCUMFERENCE * m_drive->GetVelocity() * period) 
 	* GEAR_RATIO);
 	SmartDashboard::PutNumber("velocity", -1 * (m_drive->GetVelocity()));
 	SmartDashboard::PutNumber("period", period);
 	SmartDashboard::PutNumber("sensesd travel", travelled_dist);
-	SmartDashboard::PutNumber("angle offset", angleOffset(angle) * 180 / PI); // i think angle offset is wack
-	SmartDashboard::PutNumber("dist offset", sqrt(x*x + y*y) - travelled_dist); // this is not correct currently
-	return m_pi->driveAdjusted(angleOffset(angle), sqrt(x*x + y*y) - travelled_dist, angleOffsetCoefficient);
+	m_drive->TankDrive(-.1*pow(E,2-4.605*(recursion/1000)),-.1*pow(E,2-4.605*(recursion/1000)),false);
+	if(dis != travelled_dist){
+		driveTo((dis*0.0000000511117)-travelled_dist, period, recursion+1.60943791/10);
+	}
 }
 
 
