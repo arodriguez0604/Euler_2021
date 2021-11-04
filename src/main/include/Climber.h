@@ -2,6 +2,9 @@
 
 using namespace frc;
 
+#define RATCHETENGAGED false
+#define RATCHETDISENGAGED true
+
 class Climber {
 	public:
 	Climber(frc::XboxController *xbox, frc::DoubleSolenoid *climb_solenoid);
