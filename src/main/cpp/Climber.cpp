@@ -47,7 +47,7 @@ Climber::Reinit()
 void 
 Climber::DisabledInit()
 {
-    m_ratchet_solenoid->Set(RATCHETDISENGAGED); 
+    m_ratchet_solenoid->Set(RATCHETENGAGED); 
 }
 
 void
@@ -75,7 +75,7 @@ Climber::Tick()
             SmartDashboard::PutBoolean("Ratchet Enganged", false);
         }
         else {
-            m_ratchet_solenoid->Set(RATCHETDISENGAGED);
+            m_ratchet_solenoid->Set(RATCHETENGAGED);
             SmartDashboard::PutBoolean("Ratchet Enganged", true);
         }
         m_lift->Set(motorSpeed);
@@ -121,5 +121,5 @@ Climber::DisengageRatchet()
 void
 Climber::EngageRatchet()
 {
-    m_ratchet_solenoid->Set(RATCHETDISENGAGED); //dis
+    m_ratchet_solenoid->Set(RATCHETENGAGED);
 }
