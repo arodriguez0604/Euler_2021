@@ -89,3 +89,12 @@ Spinner::Tick()
         m_spinner->Set(0.00);
     }
 }
+
+void
+Spinner::autonTick(int mode) {
+    switch (mode) {
+        case 0:
+            m_spinner->Set(1);
+            break;
+    }
+}

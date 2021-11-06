@@ -1,11 +1,12 @@
 #include "Euler.h"
 
-Auton::Auton(DalekDrive *drive, AHRS * ahrs, RaspberryPi *pi, BallIntake *ballIntake)
+Auton::Auton(DalekDrive *drive, AHRS * ahrs, RaspberryPi *pi, BallIntake *ballIntake, Spinner *spinner)
 {
 	m_drive			= drive;
 	m_ahrs			= ahrs;
 	m_pi            = pi; 
 	m_ballIntake    = ballIntake;
+	m_spinner       = spinner;
 
 	autonStage = 0;
 	travelled_dist = 0;
@@ -14,10 +15,67 @@ Auton::Auton(DalekDrive *drive, AHRS * ahrs, RaspberryPi *pi, BallIntake *ballIn
 	//autonChallenge    = frc::SmartDashboard::GetData("Auton Challenge");
 
 	p_temp = 0; i_temp = 0; d_temp = 0;
-	period = 0;
+	myPeriod = 0;
+	tempCont = false;
 	firstBallLost = false;
 	secondBallLost = false;
 	thirdBallLost = false;
+}
+
+void Auton::startGame (int mode, double period) {
+	myPeriod += period;
+	if (mode == 0) {
+		switch (autonStage) {
+			case 0:
+				m_spinner->autonTick(0);
+				if (myPeriod > 1 || tempCont) {
+					if (myPeriod > 1) {
+						myPeriod = 0;
+						tempCont = true;
+					}
+					if (myPeriod < 0.15) {
+						m_ballIntake->Tick(0);
+					}	else {
+							autonStage++;
+							myPeriod = 0;
+							tempCont = false;
+						}
+				}
+				break;
+			case 1:
+				m_spinner->autonTick(0);
+				if (myPeriod > 0.5 || tempCont) {
+					if (myPeriod > 0.5) {
+						myPeriod = 0;
+						tempCont = true;
+					}
+					if (myPeriod < 0.15) {
+						m_ballIntake->Tick(0);
+					}	else {
+							autonStage++;
+							myPeriod = 0;
+							tempCont = false;
+						}
+				}
+				break;
+			case 2:
+				m_spinner->autonTick(0);
+				if (myPeriod > 0.5 || tempCont) {
+					if (myPeriod > 0.5) {
+						myPeriod = 0;
+						tempCont = true;
+					}
+					if (myPeriod < 0.15) {
+						m_ballIntake->Tick(0);
+					}	else {
+							autonStage++;
+							myPeriod = 0;
+							tempCont = false;
+						}
+				}
+				break;
+		}
+	}
 }
 
 void Auton::GalaticSearch(double period) {
@@ -115,95 +173,94 @@ void Auton::GalaticSearch(double period) {
 }
 
 void Auton::AutoNav(double badPeriod, int path) {
-	std::cout << "Bad-Period: " << badPeriod << std::endl;
-	std::cout << "Period: " << period << std::endl;
-	period += badPeriod;
-	//be careful with this the first time
-	switch (path) {
-		//barrel
-		case 0:
-			if (period < 1.12)
-				m_drive->TankDrive(-1.00, -1.00, false);
-			else if (period < 3.45)
-				m_drive->TankDrive(-1.00, -0.30, false);
-			else if (period < 6.15)
-				m_drive->TankDrive(-1.00, 0.07, false);
-			else if (period < 7.20)
-				m_drive->TankDrive(-0.30, -1.00, false);
-			else if (period < 6.20)
+// 	std::cout << "Bad-Period: " << badPeriod << std::endl;
+// 	//std::cout << "Period: " << period << std::endl;
+// 	//period += badPeriod;
+// 	//be careful with this the first time
+// 	switch (path) {
+// 		//barrel
+// 		case 0:
+// 			if (period < 1.12)
+// 				m_drive->TankDrive(-1.00, -1.00, false);
+// 			else if (period < 3.45)
+// 				m_drive->TankDrive(-1.00, -0.30, false);
+// 			else if (period < 6.15)
+// 				m_drive->TankDrive(-1.00, 0.07, false);
+// 			else if (period < 7.20)
+// 				m_drive->TankDrive(-0.30, -1.00, false);
+// 			else if (period < 6.20)
 
 
-				m_drive->TankDrive(-1.00, -1.00, false);
-			else if (period < 7.25)
-				m_drive->TankDrive(-0.30, -1.00, false);
-			else if (period < 9.10)
-				m_drive->TankDrive(-1.00, -1.00, false);
-			else
-				m_drive->TankDrive(0.00, 0.00, false); 
-			break;
+// 				m_drive->TankDrive(-1.00, -1.00, false);
+// 			else if (period < 7.25)
+// 				m_drive->TankDrive(-0.30, -1.00, false);
+// 			else if (period < 9.10)
+// 				m_drive->TankDrive(-1.00, -1.00, false);
+// 			else
+// 				m_drive->TankDrive(0.00, 0.00, false); 
+// 			break;
 
-		//slamlom
-		case 1:
-			if (period < 0.70)
-				m_drive->TankDrive(-1.00, -1.00, false);
-			else if (period < 1.75)
-				m_drive->TankDrive(-0.30, -0.90, false);
-			else if (period < 2.38)
-				m_drive->TankDrive(-1.00, -0.30, false);
-			else if (period < 3.70)
-				m_drive->TankDrive(-1.00, -1.00, false);
-			else if (period < 4.40)
-				m_drive->TankDrive(-0.30, -0.75, false);
-			else if (period < 7.50)
-				m_drive->TankDrive(-1.00, -0.152, false);
-			else if (period < 8.50)
-				m_drive->TankDrive(-1.00, -0.30, false);
-			else if (period < 9.70)
-				m_drive->TankDrive(-1.00, -1.00, false);
-			else if (period < 10.40)
-				m_drive->TankDrive(-1.00, -0.30, false);
-			else if (period < 10.60)
-				m_drive->TankDrive(-0.30, -1.00, false);
-			else
-				m_drive->TankDrive(0.00, 0.00, false);
-			break;
+// 		//slamlom
+// 		case 1:
+// 			if (period < 0.70)
+// 				m_drive->TankDrive(-1.00, -1.00, false);
+// 			else if (period < 1.75)
+// 				m_drive->TankDrive(-0.30, -0.90, false);
+// 			else if (period < 2.38)
+// 				m_drive->TankDrive(-1.00, -0.30, false);
+// 			else if (period < 3.70)
+// 				m_drive->TankDrive(-1.00, -1.00, false);
+// 			else if (period < 4.40)
+// 				m_drive->TankDrive(-0.30, -0.75, false);
+// 			else if (period < 7.50)
+// 				m_drive->TankDrive(-1.00, -0.152, false);
+// 			else if (period < 8.50)
+// 				m_drive->TankDrive(-1.00, -0.30, false);
+// 			else if (period < 9.70)
+// 				m_drive->TankDrive(-1.00, -1.00, false);
+// 			else if (period < 10.40)
+// 				m_drive->TankDrive(-1.00, -0.30, false);
+// 			else if (period < 10.60)
+// 				m_drive->TankDrive(-0.30, -1.00, false);
+// 			else
+// 				m_drive->TankDrive(0.00, 0.00, false);
+// 			break;
 
-		//bounce
-		case 2:
-			if (period < 0.65)
-				m_drive->TankDrive(-1.00, -1.00, false);
-			else if (period < 1.30)
-				m_drive->TankDrive(-0.80, -1.00, false);
-			else if (period < 1.70)
-				m_drive->TankDrive(1.00, 1.00, false);
-			else if (period < 2.30)
-				m_drive->TankDrive(1.00, 0.90, false);
-			else if (period < 3.15)
-				m_drive->TankDrive(1.00, 0.00, false);
-			else if (period < 3.60)
-				m_drive->TankDrive(1.00, 0.25, false);
-			else if (period < 4.40)
-				m_drive->TankDrive(1.00, 1.00, false);
-			else if (period < 5.35)
-				m_drive->TankDrive(-1.00, -1.00, false);
-			else if (period < 6.60)
-				m_drive->TankDrive(-0.25, -1.00, false);
-			else if (period < 7.35)
-				m_drive->TankDrive(-1.00, -1.00, false);
-			else if (period < 7.70)
-				m_drive->TankDrive(-0.25, -1.00, false);
-			else if (period < 8.30)
-				m_drive->TankDrive(-1.00, -1.00, false);
-			else if (period < 9.00)
-				m_drive->TankDrive(0.30, 1.00, false);
-			else if (period < 10.00)
-				m_drive->TankDrive(0.00, 0.00, false);
-			else
-				m_drive->TankDrive(0.00, 0.00, false);
-			break;
-	}
-
-}
+// 		//bounce
+// 		case 2:
+// 			if (period < 0.65)
+// 				m_drive->TankDrive(-1.00, -1.00, false);
+// 			else if (period < 1.30)
+// 				m_drive->TankDrive(-0.80, -1.00, false);
+// 			else if (period < 1.70)
+// 				m_drive->TankDrive(1.00, 1.00, false);
+// 			else if (period < 2.30)
+// 				m_drive->TankDrive(1.00, 0.90, false);
+// 			else if (period < 3.15)
+// 				m_drive->TankDrive(1.00, 0.00, false);
+// 			else if (period < 3.60)
+// 				m_drive->TankDrive(1.00, 0.25, false);
+// 			else if (period < 4.40)
+// 				m_drive->TankDrive(1.00, 1.00, false);
+// 			else if (period < 5.35)
+// 				m_drive->TankDrive(-1.00, -1.00, false);
+// 			else if (period < 6.60)
+// 				m_drive->TankDrive(-0.25, -1.00, false);
+// 			else if (period < 7.35)
+// 				m_drive->TankDrive(-1.00, -1.00, false);
+// 			else if (period < 7.70)
+// 				m_drive->TankDrive(-0.25, -1.00, false);
+// 			else if (period < 8.30)
+// 				m_drive->TankDrive(-1.00, -1.00, false);
+// 			else if (period < 9.00)
+// 				m_drive->TankDrive(0.30, 1.00, false);
+// 			else if (period < 10.00)
+// 				m_drive->TankDrive(0.00, 0.00, false);
+// 			else
+// 				m_drive->TankDrive(0.00, 0.00, false);
+// 			break;
+// 	}
+ }
 
 // void Auton::AutonCase(int begin, int end)
 // {
@@ -333,6 +390,28 @@ bool Auton::driveToCoordinates(double x, double y, double angle, double period)
 	SmartDashboard::PutNumber("angle offset", angleOffset(angle) * 180 / PI); // i think angle offset is wack
 	SmartDashboard::PutNumber("dist offset", sqrt(x*x + y*y) - travelled_dist); // this is not correct currently
 	return m_pi->driveAdjusted(angleOffset(angle), sqrt(x*x + y*y) - travelled_dist, angleOffsetCoefficient);
+}
+
+//Turns the robot on a dot to the angle given
+//positive angle (right)
+//negative angle (left)
+void Auton::turnTo(double angle, double period, double distanceTravelled)
+{
+	if (angle < 0)
+		m_drive->TankDrive(1.0, -1.0, false); //this has to be tested
+	else if (angle > 0)
+		m_drive->TankDrive(-1.0, 1.0, false); //this has to be tested
+	else {
+		m_drive->TankDrive(0.0, 0.0, false);
+		return;
+	}
+
+	distanceTravelled += ((WHEEL_CIRCUMFERENCE * m_drive->GetVelocity() * period) * GEAR_RATIO);
+	if (travelled_dist >= (angle * PI * radiusOfRobot) / 180) {
+		m_drive->TankDrive(0.0, 0.0, false);
+		return;
+	}
+	turnTo(angle, period, distanceTravelled);
 }
 
 

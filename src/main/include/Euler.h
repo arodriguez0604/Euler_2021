@@ -29,10 +29,10 @@
 #include <DalekDrive.h>
 #include <RaspberryPi.h>
 #include <BallIntake.h>
-#include <Limelight.h>
+//#include <Limelight.h>
+#include <Spinner.h>
 #include <Auton.h>
 #include <Climber.h>
-#include <Spinner.h>
 
 #define PI	3.14159265358979323846
 
@@ -119,7 +119,7 @@ class Robot : public TimedRobot {
 	BallIntake *m_ballIntake;
 	Auton *m_auton;
 	AHRS *m_ahrs;
-	Limelight *m_limelight;
+	//Limelight *m_limelight;
 	frc::DoubleSolenoid *m_climb_solenoid;
 	#ifndef CYAN_ROBOT	
 		Climber *m_climber;
@@ -130,6 +130,7 @@ class Robot : public TimedRobot {
 	//bool timeChanged = false;
 	//double waitSeconds = 0.0, timeOffset = 0.0;
 	//int auton_start, auton_end;
+	double timeElapsed;
 	bool autonChallenge;
 	int path;
 };

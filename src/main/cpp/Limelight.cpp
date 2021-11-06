@@ -1,9 +1,9 @@
-#include "Euler.h"
+//#include "Euler.h"
 
-Limelight::Limelight(DalekDrive *drive) {
-    m_drive = drive;
+//Limelight::Limelight(DalekDrive *drive) {
+//    m_drive = drive;
 	//std::shared_ptr<NetworkTable> limelightPos = NetworkTable::GetTable("limelight");
-}
+//}
 
 // void Limelight::Update() {
 //     // SmartDashboard::PutNumber("tv", nt::NetworkTableInstance::GetDefault().GetTable("limelight")->GetNumber("tv", 0.0));
