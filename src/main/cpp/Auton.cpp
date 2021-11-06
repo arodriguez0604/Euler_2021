@@ -395,23 +395,32 @@ bool Auton::driveToCoordinates(double x, double y, double angle, double period)
 //Turns the robot on a dot to the angle given
 //positive angle (right)
 //negative angle (left)
-void Auton::turnTo(double angle, double period, double distanceTravelled)
+void Auton::turnTo(double angle, double period, bool turnRight)
 {
-	if (angle < 0)
-		m_drive->TankDrive(1.0, -1.0, false); //this has to be tested
-	else if (angle > 0)
-		m_drive->TankDrive(-1.0, 1.0, false); //this has to be tested
-	else {
+	currentAngle = m_ahrs->GetAngle();
+	frc::SmartDashboard::PutNumber("Angle", currentAngle);
+
+	//if we have turned enough, then break loop
+	if (currentAngle > angle - turningErrorThreshold && currentAngle < angle + turningErrorThreshold) {
 		m_drive->TankDrive(0.0, 0.0, false);
 		return;
 	}
 
-	distanceTravelled += ((WHEEL_CIRCUMFERENCE * m_drive->GetVelocity() * period) * GEAR_RATIO);
-	if (travelled_dist >= (angle * PI * radiusOfRobot) / 180) {
-		m_drive->TankDrive(0.0, 0.0, false);
-		return;
+	//turn right
+	if (turnRight) {
+		m_drive->TankDrive(1.0 - (0.5 * (angle / ((double)currentAngle + 0.01))), -1.0 + (0.5 * (angle / ((double)currentAngle + 0.01))), false); //this has to be tested
+		if (currentAngle < angle)
+			turnTo(angle, period, !turnRight);
 	}
-	turnTo(angle, period, distanceTravelled);
+	//turn left
+	else if (angle > 0) {
+		m_drive->TankDrive(-1.0 + (0.5 * (angle / ((double)currentAngle + 0.01))), 1.0 - (0.5 * (angle / ((double)currentAngle + 0.01))), false); //this has to be tested
+		if (currentAngle > angle)
+			turnTo(angle, period, !turnRight);
+	}
+
+	//recursive call
+	turnTo(angle, period, turnRight);
 }
 
 
@@ -427,9 +436,9 @@ bool Auton::turnToFace(double angle)
 	d_temp = p_temp - prev_error;
 	double pid_result = pTurn * p_temp + iTurn * i_temp + dTurn * d_temp;
 	if (pid_result > 0) {
-		m_drive->TankDrive(min(pid_result, maxTurnSpeed), -min(pid_result, maxTurnSpeed), false);
+		m_drive->TankDrive(min(pid_result, maxAutonSpeed), -min(pid_result, maxAutonSpeed), false);
 	} else {
-		m_drive->TankDrive(max(pid_result, -maxTurnSpeed), -max(pid_result, -maxTurnSpeed), false);
+		m_drive->TankDrive(max(pid_result, -maxAutonSpeed), -max(pid_result, -maxAutonSpeed), false);
 	}
 	return false;
 }
