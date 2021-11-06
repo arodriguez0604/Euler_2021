@@ -13,6 +13,7 @@ class Spinner {
 	Spinner(frc::XboxController *xbox, frc::DoubleSolenoid *climb_solenoid);
 	~Spinner();
     void Tick();
+	void autonTick(int mode);
 	void Reinit();
 
 	private:

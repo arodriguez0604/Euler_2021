@@ -18,33 +18,36 @@ void Robot::RobotInit()
       m_pi          = new RaspberryPi(m_drive);
       m_compressor  = new frc::Compressor(PCM);
       m_ballIntake  = new BallIntake(m_xbox);
-      m_auton       = new Auton(m_drive, m_ahrs, m_pi, m_ballIntake);
+      m_spinner     = new Spinner(m_xbox,m_climb_solenoid);
+      m_auton       = new Auton(m_drive, m_ahrs, m_pi, m_ballIntake, m_spinner);
       #ifndef CYAN_ROBOT
         m_climber     = new Climber(m_xbox,m_climb_solenoid);
-        m_spinner     = new Spinner(m_xbox,m_climb_solenoid);
       #endif
-      m_limelight   = new Limelight(m_drive);
+      //m_limelight   = new Limelight(m_drive);
     }
   catch (std::exception& e) {
     std::string err_string = "Error instantiating components:  ";
     err_string += e.what();
     DriverStation::ReportError(err_string.c_str());
   }
-  frc::SmartDashboard::PutNumber("Start Auton", 2);
-  frc::SmartDashboard::PutNumber("End Auton", 2);
+  // frc::SmartDashboard::PutNumber("Start Auton", 2);
+  // frc::SmartDashboard::PutNumber("End Auton", 2);
   frc::SmartDashboard::PutNumber("Delay", 0);
-  frc::SmartDashboard::PutNumber("Delay Phase", 0);
-  frc::SmartDashboard::PutNumber("Auton Phase", 0);
-  frc::SmartDashboard::PutBoolean("Pickup Ball End", false);
-  frc::SmartDashboard::PutBoolean("Pickup Ball Start", false);
-  frc::SmartDashboard::PutBoolean("Galactic Search", true);
-  frc::SmartDashboard::PutNumber("Path", 0);
+  // frc::SmartDashboard::PutNumber("Delay Phase", 0);
+  // frc::SmartDashboard::PutNumber("Auton Phase", 0);
+  // frc::SmartDashboard::PutBoolean("Pickup Ball End", false);
+  // frc::SmartDashboard::PutBoolean("Pickup Ball Start", false);
+  // frc::SmartDashboard::PutBoolean("Galactic Search", true);
+  // frc::SmartDashboard::PutNumber("Path", 0);
+  frc::SmartDashboard::PutNumber("Mode", 0);
   //frc::SmartDashboard::PutNumber("Starting # of Balls", 3);
 
   m_ahrs->ZeroYaw();
   m_ahrs->Reset();
   m_ahrs->ResetDisplacement();
   m_compressor->Start();
+
+  timeElapsed = 0;
 }
 
 void Robot::RobotPeriodic()
@@ -62,35 +65,23 @@ void Robot::AutonomousInit()
   
   //This is not seeing it
   //autonChallenge = frc::SmartDashboard::GetData("Galactic Search");
+
   #ifndef CYAN_ROBOT
     m_climber->Reinit();
     m_spinner->Reinit();
   #endif
   m_ballIntake->Reinit();
-  frc::SmartDashboard::PutBoolean("Auton Done", false);
-  path = frc::SmartDashboard::GetNumber("Path", 0);
+  //frc::SmartDashboard::PutBoolean("Auton Done", false);
+  //path = frc::SmartDashboard::GetNumber("Path", 0);
 }
 
 void Robot::AutonomousPeriodic() 
 {
-	double period = (double)this->GetPeriod();
-	// waitSeconds += period;
-	// if (waitSeconds >= 0) { // the number 0 change based on how long we want to wait in the auton sequence
-	// 	m_auton->AutonDrive(period);
-	// }
-
-
-  //0 - Barrel Racing
-  //1 - Slalom Path
-  //2 - Bounce Path
-
-  //if (autonChallenge)
-    m_auton->driveTo(10,period,0);
-  // else
-  // m_auton->AutoNav(period, path);
-  
-
-
+  //waits for the amount of seconds defined by "Delay" in the smart dashboard
+  //after total elapsed time >= the "Delay", execute autonomous code
+	timeElapsed += (double)this->GetPeriod();
+	if (timeElapsed >= (double)(int)frc::SmartDashboard::GetData("Delay"))
+    m_auton->startGame((int)frc::SmartDashboard::GetData("Mode"), (double)this->GetPeriod());
 }
 
 void Robot::TeleopInit()

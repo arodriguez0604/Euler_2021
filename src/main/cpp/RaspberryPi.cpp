@@ -6,8 +6,8 @@ RaspberryPi::RaspberryPi(DalekDrive *drive) {
 
 bool RaspberryPi::FollowBall()
 {
-	int offset = frc::SmartDashboard::GetNumber("X Offset", 100000), distance = frc::SmartDashboard::GetNumber("Distance", -1);
-	if (offset == 100000 || distance == -1) {
+	int offset = frc::SmartDashboard::GetNumber("X Offset", 0), distance = frc::SmartDashboard::GetNumber("Distance", -1);
+	if (offset == 0 || distance == -1) {
 		m_drive->TankDrive(0.0, 0.0, false);
 		SmartDashboard::PutBoolean("camera sees ball?", false);
 		return false;

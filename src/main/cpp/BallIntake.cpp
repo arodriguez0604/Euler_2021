@@ -188,7 +188,6 @@ void BallIntake::Tick(int input) {
 	SmartDashboard::PutNumber("ballCount", GetBallCount());
 	SmartDashboard::PutNumber("Pickup Phase", pickupPhase);
 	std::cout << "Pickup Phase: " << pickupPhase << std::endl;
-	triggerOn = true;
 	
 	if (input == 0) {
     	if (intake_solenoid->Get() == frc::DoubleSolenoid::kForward){
@@ -197,7 +196,7 @@ void BallIntake::Tick(int input) {
       		intake_solenoid->Set(frc::DoubleSolenoid::kForward);
     	}
  	}
-	else if (triggerOn && !m_releaseSensor->Get()) {
+	else if (!m_releaseSensor->Get()) {
 		switch (pickupPhase) {
 					case 0:
 						if (!m_pickupSensor->Get()) {
