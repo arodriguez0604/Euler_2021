@@ -183,101 +183,31 @@ BallIntake::Tick()
 
 //This is used for auton Galatic Drive
 void BallIntake::Tick(int input) {
-	//SmartDashboard::PutBoolean("Input Sensed", m_pickupSensor->Get());
-	//SmartDashboard::PutBoolean("Output Sensed", m_releaseSensor->Get());
-	SmartDashboard::PutNumber("ballCount", GetBallCount());
-	SmartDashboard::PutNumber("Pickup Phase", pickupPhase);
-	std::cout << "Pickup Phase: " << pickupPhase << std::endl;
-	
-	if (input == 0) {
-    	if (intake_solenoid->Get() == frc::DoubleSolenoid::kForward){
-      		intake_solenoid->Set(frc::DoubleSolenoid::kReverse);
-    	} else {
-      		intake_solenoid->Set(frc::DoubleSolenoid::kForward);
-    	}
- 	}
-	else if (!m_releaseSensor->Get()) {
-		switch (pickupPhase) {
-					case 0:
-						if (!m_pickupSensor->Get()) {
-							ballCount++;
-							pickupPhase++;
-							m_conveyor->Set(0.5 + .0 * ballCount);
-							m_intake->Set(0);
-						} else {
-							intake_solenoid->Set(frc::DoubleSolenoid::kForward);
-							m_intake->Set(0.50);
-							m_conveyor->Set(0);
-						}
-						break;
-					case 1:
-						if (m_pickupSensor->Get()) {
-							pickupPhase++;
-							m_conveyor->Set(0);
-							m_intake->Set(1.00);
-						} else {
-							m_conveyor->Set(0.5 + .075 * ballCount);
-							m_intake->Set(0);
-						}
-						break;
-					case 2:
-						if (!m_pickupSensor->Get()) {
-							ballCount++;
-							pickupPhase++;
-							m_conveyor->Set(0.5 + .0 * ballCount);
-							m_intake->Set(0);
-						} else {
-							intake_solenoid->Set(frc::DoubleSolenoid::kForward);
-							m_intake->Set(0.75);
-							m_conveyor->Set(0);
-						}
-						break;
-					case 3:
-						if (m_pickupSensor->Get()) {
-							pickupPhase++;
-							m_conveyor->Set(0);
-							m_intake->Set(0.75);
-						} else {
-							m_conveyor->Set(0.5 + .075 * ballCount);
-							m_intake->Set(0);
-						}
-						break;
-					case 4:
-						if (!m_pickupSensor->Get()) {
-							ballCount++;
-							pickupPhase++;
-							m_conveyor->Set(0.5 + .0 * ballCount);
-							m_intake->Set(0);
-						} else {
-							intake_solenoid->Set(frc::DoubleSolenoid::kForward);
-							m_intake->Set(0.75);
-							m_conveyor->Set(0);
-						}
-						break;
-					case 5:
-						if (m_pickupSensor->Get()) {
-							pickupPhase++;
-							m_conveyor->Set(0);
-							m_intake->Set(0);
-						} else {
-							m_conveyor->Set(0.5 + .075 * ballCount);
-							m_intake->Set(0);
-						}
-						break;
-				}
-			} else {
-				pickupPhase = 0;
-				m_conveyor->Set(0);
-				if (triggerOn) {
-					m_intake->Set(0.5);
-				} else {
-					m_intake->Set(0);
-				}
+	switch (input) {
+		case 0:
+			m_conveyor->Set(0.0);
+			m_intake->Set(0.0);
+			break;
+		case 1:
+			m_conveyor->Set(0.5);
+			break;
+		case 2:
+			if (intake_solenoid->Get() == frc::DoubleSolenoid::kForward)
+				intake_solenoid->Set(frc::DoubleSolenoid::kReverse);
+			else
+				intake_solenoid->Set(frc::DoubleSolenoid::kForward);
+			if (!m_pickupSensor)			
+				m_intake->Set(0.5);
+			else {
+				m_intake->Set(0.0);
+				m_conveyor->Set(0.5);
 			}
-	if (seeBall && !m_releaseSensor->Get() && ballCount > 0) {
-		ballCount--;
-	}
-	seeBall = m_releaseSensor->Get();
+			break;
+		default:
+			m_conveyor->Set(0.0);
+			m_intake->Set(0.0);
+			break;
+	}	
 }
 
 bool 

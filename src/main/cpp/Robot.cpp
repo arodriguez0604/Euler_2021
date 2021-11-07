@@ -33,6 +33,7 @@ void Robot::RobotInit()
   // frc::SmartDashboard::PutNumber("Start Auton", 2);
   // frc::SmartDashboard::PutNumber("End Auton", 2);
   frc::SmartDashboard::PutNumber("Delay", 0);
+  frc::SmartDashboard::PutBoolean("Auton Ready", true);
   // frc::SmartDashboard::PutNumber("Delay Phase", 0);
   // frc::SmartDashboard::PutNumber("Auton Phase", 0);
   // frc::SmartDashboard::PutBoolean("Pickup Ball End", false);
@@ -104,11 +105,11 @@ void Robot::TeleopPeriodic()
     }
 
 
-	m_ballIntake->Tick();  
-  #ifndef CYAN_ROBOT
+	m_ballIntake->Tick(); 
+  m_climber->Tick();
+  if (!m_climber->isClimberEngaged())
     m_spinner->Tick();
-    m_climber->Tick();
-  #endif
+
   //m_limelight->Update();
   // if (m_drive) {
   //   if (m_rightStick->GetTrigger() || m_leftStick->GetTrigger()) {
