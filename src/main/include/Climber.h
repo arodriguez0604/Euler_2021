@@ -15,6 +15,8 @@ class Climber {
 	void DisengageRatchet();
 	void EngageRatchet();
 	
+	bool isClimberEngaged();
+	
 	private:
 	WPI_TalonSRX *m_trolley, *m_lift;
 	XboxController *m_xbox;
@@ -22,4 +24,6 @@ class Climber {
 	frc::DoubleSolenoid *m_climb_solenoid;
 
 	void init(frc::XboxController *xbox, frc::DoubleSolenoid *climb_solenoid);
+
+	bool climberEngaged;
 };

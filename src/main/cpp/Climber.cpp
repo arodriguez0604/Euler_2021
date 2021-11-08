@@ -27,6 +27,8 @@ Climber:: init(frc::XboxController *xbox, DoubleSolenoid *climb_solenoid)
     if(m_climb_solenoid == NULL)
         std::bad_alloc();
     m_climb_solenoid->Set(frc::DoubleSolenoid::kReverse);
+
+    climberEngaged = false;
 }
 
 Climber::~Climber()
@@ -57,6 +59,7 @@ Climber::Tick()
     frc::SmartDashboard::PutNumber("Xbox POV: ", m_xbox->GetPOV(0));
 
     if (m_xbox->GetBackButtonPressed()) {
+        climberEngaged = true;
         if (m_climb_solenoid->Get() == frc::DoubleSolenoid::kReverse) {
             m_climb_solenoid->Set(frc::DoubleSolenoid::kForward);
             m_ratchet_solenoid->Set(RATCHETDISENGAGED); //dis
@@ -64,9 +67,9 @@ Climber::Tick()
             m_climb_solenoid->Set(frc::DoubleSolenoid::kOff); //do not set back to kReverse or arm crashes down
     }
 
-    if (m_xbox->GetBButtonPressed()) {
-        m_ratchet_solenoid->Set(!m_ratchet_solenoid->Get());
-    }
+    // if (m_xbox->GetBButtonPressed()) {
+    //     m_ratchet_solenoid->Set(!m_ratchet_solenoid->Get());
+    // }
 
     if (m_climb_solenoid->Get() == frc::DoubleSolenoid::kForward) {
         double motorSpeed = m_xbox->GetY(frc::GenericHID::kLeftHand) * -1;
@@ -110,6 +113,11 @@ Climber::Tick()
    } else {
         m_trolley->Set(0.0);
     }
+}
+
+bool
+Climber::isClimberEngaged() {
+    return climberEngaged;
 }
 
 void
