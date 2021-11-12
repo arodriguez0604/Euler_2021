@@ -251,7 +251,7 @@ DalekDrive::GetVelocity()
 {
 	SmartDashboard::PutNumber("right encoder", m_rightEncoder[FRONT]->GetVelocity());
 	SmartDashboard::PutNumber("left encoder", m_leftEncoder[FRONT]->GetVelocity());
-	return WHEEL_CIRCUMFERENCE * (m_leftEncoder[FRONT]->GetVelocity() + m_rightEncoder[FRONT]->GetVelocity()) / (60 * GEAR_RATIO); //Changed 120 -> 60
+	return 39.37 * WHEEL_CIRCUMFERENCE * (m_leftEncoder[FRONT]->GetVelocity() + m_rightEncoder[FRONT]->GetVelocity()) / (60 * GEAR_RATIO); //Changed 120 -> 2362.2 (60 * 39.37)
 }
 	
 void
