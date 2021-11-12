@@ -81,10 +81,8 @@ void Robot::AutonomousPeriodic()
   //waits for the amount of seconds defined by "Delay" in the smart dashboard
   //after total elapsed time >= the "Delay", execute autonomous code
 	timeElapsed += (double)this->GetPeriod();
-	// if (timeElapsed >= (double)(int)frc::SmartDashboard::GetData("Delay"))
-  //   m_auton->startGame((int)frc::SmartDashboard::GetData("Mode"), (double)this->GetPeriod());
-
-  m_auton->Test(timeElapsed);
+	if (timeElapsed >= (double)(int)frc::SmartDashboard::GetData("Delay"))
+    m_auton->startGame((int)frc::SmartDashboard::GetData("Mode"), (double)this->GetPeriod());
 }
 
 void Robot::TeleopInit()

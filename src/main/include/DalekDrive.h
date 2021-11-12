@@ -2,7 +2,7 @@
 
 #define WHEEL_CIRCUMFERENCE			0.612775 // meters
 #define GEAR_RATIO					12
-#define CAN_TIMEOUT					100
+#define CAN_TIMEOUT					300
 #define STALL_LIMIT					60
 #define FREE_LIMIT					20
 #define RAMP_RATE					0.5

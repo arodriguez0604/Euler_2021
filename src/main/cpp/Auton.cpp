@@ -24,12 +24,12 @@ void Auton::startGame (int mode, double period) {
 		switch (autonStage) {
 			case 0:
 				m_spinner->autonTick(1);
-				if (myPeriod > 1 || tempCont) {
+				if (myPeriod > 3 || tempCont) {
 					if (!tempCont) {
 						myPeriod = 0;
 						tempCont = true;
 					}
-					if (myPeriod < 0.15) {
+					if (myPeriod < 0.60) {
 						m_ballIntake->Tick(1);
 					}	else {
 							autonStage++;
@@ -40,12 +40,12 @@ void Auton::startGame (int mode, double period) {
 				}
 				break;
 			case 1:
-				if (myPeriod > 0.5 || tempCont) {
+				if (myPeriod > 1 || tempCont) {
 					if (!tempCont) {
 						myPeriod = 0;
 						tempCont = true;
 					}
-					if (myPeriod < 0.15) {
+					if (myPeriod < 0.27) {
 						m_ballIntake->Tick(1);
 					}	else {
 							autonStage++;
@@ -56,12 +56,12 @@ void Auton::startGame (int mode, double period) {
 				}
 				break;
 			case 2:
-				if (myPeriod > 0.5 || tempCont) {
+				if (myPeriod > 1.2 || tempCont) {
 					if (!tempCont) {
 						myPeriod = 0;
 						tempCont = true;
 					}
-					if (myPeriod < 0.15) {
+					if (myPeriod < 0.75) {
 						m_ballIntake->Tick(1);
 					}	else {
 							autonStage++;
@@ -73,20 +73,10 @@ void Auton::startGame (int mode, double period) {
 				}
 				break;
 			case 3:
-				if (driveTo(1.90, period)) { //2.01
+				if (driveTo(74.13386, period)) {
 					autonStage++;
 					traveled_dist = 0;
 				}
-				break;
-			case 4:
-				//turnTo(15.0, period, true);
-				autonStage++;
-				break;
-			case 5:
-				//if (driveTo(1.91, period)) {
-					autonStage++;
-					traveled_dist = 0;
-				//}
 				break;
 			default:
 				m_drive->TankDrive(0.0, 0.0, false);
@@ -98,12 +88,12 @@ void Auton::startGame (int mode, double period) {
 			switch(autonStage) {
 				case 0:
 					m_spinner->autonTick(1);
-					if (myPeriod > 1 || tempCont) {
+					if (myPeriod > 3 || tempCont) {
 						if (!tempCont) {
 							myPeriod = 0;
 							tempCont = true;
 						}
-						if (myPeriod < 0.15) {
+						if (myPeriod < 0.70) {
 							m_ballIntake->Tick(1);
 						}	else {
 								autonStage++;
@@ -114,12 +104,12 @@ void Auton::startGame (int mode, double period) {
 					}
 					break;
 				case 1:
-					if (myPeriod > 0.5 || tempCont) {
+					if (myPeriod > 1.2 || tempCont) {
 						if (!tempCont) {
 							myPeriod = 0;
 							tempCont = true;
 						}
-						if (myPeriod < 0.15) {
+						if (myPeriod < 0.30) {
 							m_ballIntake->Tick(1);
 						}	else {
 								autonStage++;
@@ -130,13 +120,12 @@ void Auton::startGame (int mode, double period) {
 					}
 					break;
 				case 2:
-					m_spinner->autonTick(0);
-					if (myPeriod > 0.5 || tempCont) {
+					if (myPeriod > 1.2 || tempCont) {
 						if (!tempCont) {
 							myPeriod = 0;
 							tempCont = true;
 						}
-						if (myPeriod < 0.15) {
+						if (myPeriod < 0.50) {
 							m_ballIntake->Tick(1);
 						}	else {
 								autonStage++;
@@ -152,7 +141,7 @@ void Auton::startGame (int mode, double period) {
 					autonStage++;
 					break;
 				case 4:
-					if (driveTo(3.1, period)) {
+					if (driveTo(122.047, period)) {
 						autonStage++;
 						traveled_dist = 0;
 					}
@@ -162,10 +151,10 @@ void Auton::startGame (int mode, double period) {
 					autonStage++;
 					break;
 				case 6:
-					//if (driveTo(1.92, period)) {
+					if (driveTo(70.59055, period)) {
 						autonStage++;
 						traveled_dist = 0;
-					//}
+					}
 					break;
 				default:
 					m_drive->TankDrive(0.0, 0.0, false);
@@ -175,7 +164,7 @@ void Auton::startGame (int mode, double period) {
 		}	else {
 				m_drive->TankDrive(0.0, 0.0, false);
 				m_ballIntake->Tick(0);
-				m_spinner->autonTick(0);
+				//m_spinner->autonTick(0);
 			}
 }
 

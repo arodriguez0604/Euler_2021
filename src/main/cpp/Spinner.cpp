@@ -94,13 +94,13 @@ void
 Spinner::autonTick(int mode) {
     switch (mode) {
         case 0:
-            m_spinner->Set(0);
+            m_spinner->Set(0.0);
             break;
         case 1:
-            m_spinner->Set(1);
+            m_spinner->Set(0.80);
             break;
         default:
-            m_spinner->Set(0);
+            m_spinner->Set(0.0);
             break;
     }
 }
