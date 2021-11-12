@@ -13,9 +13,8 @@ Auton::Auton(DalekDrive *drive, AHRS * ahrs, RaspberryPi *pi, BallIntake *ballIn
 	myPeriod = 0;
 	
 	tempCont = false;
-	firstBallLost = false;
-	secondBallLost = false;
-	thirdBallLost = false;
+
+	frc::SmartDashboard::PutNumber("AHRS", m_ahrs->GetAngle());
 }
 
 void Auton::startGame (int mode, double period) {
@@ -74,19 +73,24 @@ void Auton::startGame (int mode, double period) {
 				}
 				break;
 			case 3:
-				if (driveTo(2.01, period));
-				autonStage++;
+				if (driveTo(1.90, period)) { //2.01
+					autonStage++;
+					traveled_dist = 0;
+				}
 				break;
 			case 4:
-				turnTo(15.0, true);
+				//turnTo(15.0, period, true);
 				autonStage++;
 				break;
 			case 5:
-				if (driveTo(1.91, period));
-				autonStage++;
+				//if (driveTo(1.91, period)) {
+					autonStage++;
+					traveled_dist = 0;
+				//}
 				break;
 			default:
 				m_drive->TankDrive(0.0, 0.0, false);
+				m_ballIntake->Tick(0);
 				m_spinner->autonTick(0);
 				break;
 		}
@@ -144,20 +148,24 @@ void Auton::startGame (int mode, double period) {
 					}
 					break;
 				case 3:
-					turnTo(65, true);
+					turnTo(65, period, true);
 					autonStage++;
 					break;
 				case 4:
-					if (driveTo(3.1, period))
+					if (driveTo(3.1, period)) {
 						autonStage++;
+						traveled_dist = 0;
+					}
 					break;
 				case 5:
-					turnTo(75.7, false);
+					turnTo(75.7, period, false);
 					autonStage++;
 					break;
 				case 6:
-					if (driveTo(1.92, period))
+					//if (driveTo(1.92, period)) {
 						autonStage++;
+						traveled_dist = 0;
+					//}
 					break;
 				default:
 					m_drive->TankDrive(0.0, 0.0, false);
@@ -171,17 +179,41 @@ void Auton::startGame (int mode, double period) {
 			}
 }
 
+void Auton::Test(double period) {
+	switch (autonStage) {
+		case 0:
+			if (driveTo(1, period)) {
+				frc::SmartDashboard::PutBoolean("Drive To", true);
+				autonStage++;
+			}
+			else {
+				frc::SmartDashboard::PutBoolean("Drive To", false);
+			}
+			break;
+		case 1:
+			if (turnTo(90, period, true)) {
+				frc::SmartDashboard::PutBoolean("Turn To", true);
+				autonStage++;
+			}
+			else
+				frc::SmartDashboard::PutBoolean("Turn To", false);
+			break;
+	}
+}
+
 //drives to a certain position
 //if reached distance, return true
 //else, return false
 bool Auton::driveTo(double dist, double period)
 {
+	frc::SmartDashboard::PutNumber("Distance Traveled", 1.0 - 0.5 * (dist/traveled_dist));
 	m_drive->TankDrive(1.0 - 0.5 * (dist/traveled_dist), 1.0 - 0.5 * (dist/traveled_dist), false);
-	m_ballIntake->Tick(2);
+	//m_ballIntake->Tick(2);
 	traveled_dist += -1 * (m_drive->GetVelocity() * period);
+	frc::SmartDashboard::PutNumber("Distance Traveled", traveled_dist);
 	if (traveled_dist > dist) {
 		m_drive->TankDrive(0.0, 0.0, false);
-		m_ballIntake->Tick(0);
+		//m_ballIntake->Tick(0);
 		return true;
 	}
 	return false;
@@ -190,33 +222,21 @@ bool Auton::driveTo(double dist, double period)
 //Turns the robot on a dot to the angle given
 //positive angle (right)
 //negative angle (left)
-void Auton::turnTo(double angle, bool turnRight)
+bool Auton::turnTo(double angle, double period, bool turnRight)
 {
-	//converts AHRS readings (in radians) to degrees
-	currentAngle = m_ahrs->GetAngle() * (180 / PI);
-	frc::SmartDashboard::PutNumber("Angle", currentAngle);
+	if (turnRight)
+		m_drive->TankDrive(.30, -.30, false);
+	else
+		m_drive->TankDrive(-.30, .30, false);
 
-	//if we have turned enough, then break loop
-	if (currentAngle > angle - turningErrorThreshold && currentAngle < angle + turningErrorThreshold) {
-		m_drive->TankDrive(0.0, 0.0, false);
-		return;
-	}
+	traveled_dist += (m_drive->GetVelocity() / 2) * period; //test? meters
 
-	//turn right
-	if (turnRight) {
-		m_drive->TankDrive(1.0 - (0.5 * (angle / ((double)currentAngle + 0.01))), -1.0 + (0.5 * (angle / ((double)currentAngle + 0.01))), false); //this has to be tested
-		if (currentAngle < angle)
-			turnTo(angle, !turnRight);
-	}
-	//turn left
-	else if (angle > 0) {
-		m_drive->TankDrive(-1.0 + (0.5 * (angle / ((double)currentAngle + 0.01))), 1.0 - (0.5 * (angle / ((double)currentAngle + 0.01))), false); //this has to be tested
-		if (currentAngle > angle)
-			turnTo(angle, !turnRight);
-	}
+	frc::SmartDashboard::PutNumber("Traveled Distance", traveled_dist);
 
-	//recursive call
-	turnTo(angle, turnRight);
+	if (traveled_dist >= (PI * radiusOfRobot * angle) / 180)	
+		return true;
+
+	return false;
 }
 
 double Auton::angleOffset(double angle)
