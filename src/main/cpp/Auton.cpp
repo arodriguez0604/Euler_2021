@@ -206,10 +206,10 @@ void Auton::Test(double period) {
 //else, return false
 bool Auton::driveTo(double dist, double period)
 {
-	frc::SmartDashboard::PutNumber("Distance Traveled", 1.0 - 0.5 * (dist/traveled_dist));
-	m_drive->TankDrive(1.0 - 0.5 * (dist/traveled_dist), 1.0 - 0.5 * (dist/traveled_dist), false);
+	//frc::SmartDashboard::PutNumber("Distance Traveled", 1.0 - 0.5 * (dist/traveled_dist));
+	m_drive->TankDrive(1.0 - 0.5 * (dist/(traveled_dist + 0.01)), 1.0 - 0.5 * (dist/(traveled_dist + 0.01)), false);
 	//m_ballIntake->Tick(2);
-	traveled_dist += -1 * (m_drive->GetVelocity() * period);
+	traveled_dist += m_drive->GetVelocity() * period;
 	frc::SmartDashboard::PutNumber("Distance Traveled", traveled_dist);
 	if (traveled_dist > dist) {
 		m_drive->TankDrive(0.0, 0.0, false);
@@ -229,7 +229,7 @@ bool Auton::turnTo(double angle, double period, bool turnRight)
 	else
 		m_drive->TankDrive(-.30, .30, false);
 
-	traveled_dist += (m_drive->GetVelocity() / 2) * period; //test? meters
+	traveled_dist += 39.37 * (m_drive->GetVelocity()) * period; //test? meters
 
 	frc::SmartDashboard::PutNumber("Traveled Distance", traveled_dist);
 

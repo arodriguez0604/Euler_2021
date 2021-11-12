@@ -246,12 +246,13 @@ DalekDrive::Cartesian(double ySpeed, double xSpeed, double zRotation, double gyr
 	}
 }
 
+//Gives average velocity of left and right encoder (in meter)
 double
 DalekDrive::GetVelocity()
 {
 	SmartDashboard::PutNumber("right encoder", m_rightEncoder[FRONT]->GetVelocity());
 	SmartDashboard::PutNumber("left encoder", m_leftEncoder[FRONT]->GetVelocity());
-	return 39.37 * WHEEL_CIRCUMFERENCE * (m_leftEncoder[FRONT]->GetVelocity() + m_rightEncoder[FRONT]->GetVelocity()) / (60 * GEAR_RATIO); //Changed 120 -> 2362.2 (60 * 39.37)
+	return WHEEL_CIRCUMFERENCE * (m_leftEncoder[FRONT]->GetVelocity() + m_rightEncoder[FRONT]->GetVelocity()) / (120 * GEAR_RATIO);
 }
 	
 void
