@@ -10,7 +10,7 @@
 #define turningErrorThreshold	0.2
 #define distanceErrorThreshold	0.2
 #define maxAutonSpeed			0.5
-#define radiusOfRobot           0 //this need to be measuered
+#define radiusOfRobot           15
 
 using namespace std;
 using namespace frc;
@@ -21,6 +21,7 @@ class Auton {
 	public:
 	Auton(DalekDrive *drive, AHRS * ahrs, RaspberryPi *pi, BallIntake *ballIntake, Spinner *spinner);
 	void startGame (int mode, double period);
+	void Test (double period);
 	
 	//void AutonCase(int begin, int end); // this must be called before AutonDrive()
 	void AutonDrive(double period);
@@ -33,15 +34,14 @@ class Auton {
 	Spinner *m_spinner;
 
 	double myPeriod;
-	// eventually will need delivery mechanism
 
 	int autonStage, currentAngle;
-	double exit_target_x, exit_target_y, exit_target_ang, exit_target_dist, enter_target_x, enter_target_y, enter_target_ang, enter_target_dist, traveled_dist;
-	bool pickupBallEnd, pickupBallStart, firstBallLost, secondBallLost, thirdBallLost, tempCont;
+	double traveled_dist;
+	bool tempCont;
 
 	
 	bool driveTo(double dist, double period);
-	void turnTo(double angle, bool turnRight);
+	bool turnTo(double angle, double period, bool turnRight);
 	double angleOffset(double angle);
 	//int autonChallenge;
 };

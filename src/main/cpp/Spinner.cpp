@@ -71,7 +71,7 @@ Spinner::Tick()
     // }
 
     if (m_xbox->GetX(frc::GenericHID::kRightHand) < -0.5) {
-        m_spinner->Set(0.65); //0.65
+        m_spinner->Set(0.25); //0.65
     }
     else if (m_xbox->GetY(frc::GenericHID::kRightHand) > 0.5) {
         m_spinner->Set(0.77);

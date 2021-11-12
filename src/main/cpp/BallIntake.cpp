@@ -130,14 +130,14 @@ BallIntake::Tick()
         	switch (pickupPhase) {
         	    case 0:
 	    	        if (!m_pickupSensor->Get()) {
-        	            ballCount++;
-        	            pickupPhase++;
-						m_conveyor->Set(0.5 + .0 * ballCount);
-						m_intake->Set(0);
+        	            //ballCount++;
+        	            //pickupPhase++;
+						m_conveyor->Set(0.0);
+						m_intake->Set(0.5);
 		            } else {
 						intake_solenoid->Set(frc::DoubleSolenoid::kForward);
 						m_intake->Set(0.5);
-						m_conveyor->Set(0);
+						m_conveyor->Set(0.2);
 					}
             	    break;
 				case 1:
