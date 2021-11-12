@@ -182,7 +182,7 @@ void Auton::startGame (int mode, double period) {
 void Auton::Test(double period) {
 	switch (autonStage) {
 		case 0:
-			if (driveTo(1, period)) {
+			if (driveTo(240, period)) {
 				frc::SmartDashboard::PutBoolean("Drive To", true);
 				autonStage++;
 			}
@@ -191,12 +191,7 @@ void Auton::Test(double period) {
 			}
 			break;
 		case 1:
-			if (turnTo(90, period, true)) {
-				frc::SmartDashboard::PutBoolean("Turn To", true);
-				autonStage++;
-			}
-			else
-				frc::SmartDashboard::PutBoolean("Turn To", false);
+			m_drive->TankDrive(0.0,0.0,false);
 			break;
 	}
 }
@@ -204,18 +199,21 @@ void Auton::Test(double period) {
 //drives to a certain position
 //if reached distance, return true
 //else, return false
-bool Auton::driveTo(double dist, double period)
+bool Auton::driveTo(double end_dist, double period)
 {
-	//frc::SmartDashboard::PutNumber("Distance Traveled", 1.0 - 0.5 * (dist/traveled_dist));
-	m_drive->TankDrive(1.0 - 0.5 * (dist/(traveled_dist + 0.01)), 1.0 - 0.5 * (dist/(traveled_dist + 0.01)), false);
-	//m_ballIntake->Tick(2);
-	traveled_dist += m_drive->GetVelocity() * period;
-	frc::SmartDashboard::PutNumber("Distance Traveled", traveled_dist);
-	if (traveled_dist > dist) {
+	end_dist /= 4; // this is where we guess the value
+	if (traveled_dist >= end_dist) {
 		m_drive->TankDrive(0.0, 0.0, false);
 		//m_ballIntake->Tick(0);
 		return true;
 	}
+	//frc::SmartDashboard::PutNumber("Distance Traveled", 1.0 - 0.5 * (dist/traveled_dist));
+	m_drive->TankDrive(-0.5 * (end_dist-traveled_dist)/(end_dist),-0.5 * (end_dist-traveled_dist)/(end_dist), false);
+	//m_ballIntake->Tick(2);
+	traveled_dist += m_drive->GetVelocity() * period * -39.37;
+	traveled_dist = (traveled_dist<0&&abs(traveled_dist)>1)?end_dist:traveled_dist;
+	frc::SmartDashboard::PutNumber("Distance Traveled", traveled_dist);
+	
 	return false;
 }
 

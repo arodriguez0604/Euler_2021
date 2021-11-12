@@ -40,7 +40,7 @@ class Auton {
 	bool tempCont;
 
 	
-	bool driveTo(double dist, double period);
+	bool driveTo(double end_dist, double period);
 	bool turnTo(double angle, double period, bool turnRight);
 	double angleOffset(double angle);
 	//int autonChallenge;
