@@ -96,16 +96,14 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic()
 {
-    if (m_rightStick->GetTrigger() || m_leftStick->GetTrigger()) { // JUST FOR TESTING
+    if (m_rightStick->GetTrigger() || m_leftStick->GetTrigger())
     m_pi->FollowBall();
-    frc::SmartDashboard::PutBoolean("start button pressed", true);
-    } else {
+    else if (m_rightStick->GetRawButton(4))
+      m_drive->TankDrive(m_leftStick->GetY() * 0.30, m_rightStick->GetY() * 0.30, false);
+    else
       m_drive->TankDrive(m_leftStick, m_rightStick, false);
-      frc::SmartDashboard::PutBoolean("start button pressed", false);
-    }
 
-
-	m_ballIntake->Tick(); 
+	m_ballIntake->Tick();
   m_climber->Tick();
   if (!m_climber->isClimberEngaged())
     m_spinner->Tick();
