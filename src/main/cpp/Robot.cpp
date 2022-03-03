@@ -4,7 +4,7 @@ using namespace frc;
 
 void Robot::RobotInit() 
 {
-  cs::AxisCamera camera = CameraServer::GetInstance()->AddAxisCamera(FORWARD_CAMERA);  // Initialize Camera
+  cs::AxisCamera camera = CameraServer::GetInstance()->AddAxisCamera(REAR_CAMERA);  // Initialize Camera
   // camera.SetResolution(160, 90);    // Only use these two lines if needed
   // camera.SetFPS(15);
   

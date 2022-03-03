@@ -43,7 +43,7 @@
 #define ROBORIO             "10.36.37.2"
 #define ACCESS_POINT        "10.36.37.1"
 #define FORWARD_CAMERA		"10.36.37.16"
-#define REAR_CAMERA			"10.36.37.??"
+#define REAR_CAMERA			"10.36.37.129"
 #define RASPBERRY_PI_ADDR	"10.36.37.??"
 #define LIMELIGHT_ADDR		"10.36.37.52:5800"
 #define LEVEL_SENSOR_ADDR   "10.36.37.??"
